@@ -1,6 +1,6 @@
 # 《点亮下一个星星》功能介绍书
 
-大学生 AI 职业规划与学习路线生成工具 · StarPath Navigator
+大学生 AI 职业规划与学习路线生成工具 · NextStar
 
 ---
 

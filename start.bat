@@ -8,7 +8,7 @@ set VENV_DIR=venv
 set VENV_PYTHON=%VENV_DIR%\Scripts\python.exe
 
 echo ===============================================
-echo          StarPath Navigator - College Planner
+echo          NextStar - College Planner
 echo ===============================================
 echo.
 
