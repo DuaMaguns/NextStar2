@@ -37,10 +37,9 @@
       font-family: "Outfit", "Microsoft YaHei", "PingFang SC", sans-serif;
       color: var(--ink);
       background:
-        radial-gradient(circle at 15% 10%, var(--accent2) 0, transparent 23%),
-        radial-gradient(circle at 85% 18%, var(--accent) 0, transparent 20%),
-        radial-gradient(circle at 50% 70%, var(--bg3) 0, transparent 32%),
-        linear-gradient(180deg, var(--bg), var(--bg2) 52%, var(--bg));
+        radial-gradient(circle at 15% 8%, rgba(167, 139, 250, 0.10) 0, transparent 26%),
+        radial-gradient(circle at 85% 15%, rgba(96, 165, 250, 0.10) 0, transparent 22%),
+        linear-gradient(135deg, #0c0c1e 0%, #1a1a3e 50%, #0c0c1e 100%);
       line-height: 1.75;
       overflow-x: hidden;
     }
@@ -55,11 +54,11 @@
     }
 
     body::before {
-      opacity: 0.5;
+      opacity: 0.45;
       background-image:
         radial-gradient(circle, var(--ink) 0 1px, transparent 1.6px),
         radial-gradient(circle, var(--accent) 0 1px, transparent 1.8px),
-        radial-gradient(circle, var(--accent3) 0 1px, transparent 1.6px);
+        radial-gradient(circle, var(--accent2) 0 1px, transparent 1.6px);
       background-size: 120px 120px, 190px 190px, 260px 260px;
       background-position: 12px 22px, 70px 40px, 38px 95px;
     }
@@ -68,7 +67,7 @@
       background:
         linear-gradient(120deg, transparent 0 40%, var(--glow) 48%, transparent 58%),
         radial-gradient(ellipse at center, transparent 0 42%, var(--bg) 86%);
-      opacity: 0.6;
+      opacity: 0.5;
     }
 
     a {
@@ -126,6 +125,10 @@
       color: var(--muted);
     }
 
+    .nav-links a.cta-btn {
+      color: #000;
+    }
+
     .cta-btn {
       display: inline-flex;
       align-items: center;
@@ -158,10 +161,10 @@
       border-radius: 12px;
       font-weight: 700;
       font-size: 1.05rem;
-      color: #000;
-      background: linear-gradient(135deg, #ffe066, #ffd43b);
-      border: 2px solid #fcc419;
-      box-shadow: 0 0 24px rgba(255, 212, 59, 0.45), 0 6px 18px rgba(0,0,0,0.12);
+      color: #1a160c;
+      background: linear-gradient(135deg, #fcd34d, #fbbf24);
+      border: 1px solid rgba(251, 191, 36, 0.55);
+      box-shadow: 0 0 22px rgba(251, 191, 36, 0.25), 0 6px 18px rgba(0,0,0,0.12);
       animation: hintPulse 2s ease-in-out infinite;
     }
 
@@ -169,8 +172,8 @@
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: #e03131;
-      box-shadow: 0 0 0 0 rgba(224, 49, 49, 0.7);
+      background: #fbbf24;
+      box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.6);
       animation: dotPulse 1.4s infinite;
     }
 
@@ -180,9 +183,9 @@
     }
 
     @keyframes dotPulse {
-      0% { box-shadow: 0 0 0 0 rgba(224, 49, 49, 0.7); }
-      70% { box-shadow: 0 0 0 10px rgba(224, 49, 49, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(224, 49, 49, 0); }
+      0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.6); }
+      70% { box-shadow: 0 0 0 10px rgba(251, 191, 36, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
     }
 
     @keyframes ctaPulse {
@@ -279,7 +282,7 @@
     }
 
     .button.primary {
-      color: #000;
+      color: var(--bg);
       border-color: transparent;
       background: linear-gradient(135deg, var(--accent2), var(--accent));
       box-shadow: 0 0 36px var(--glow);
@@ -673,6 +676,201 @@
       line-height: 1.55;
     }
 
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: none;
+      /* flex-start + 子元素 margin:auto：有空间时垂直居中，
+         空间不足时从顶部开始且可滚动（原先 center 会把标题顶出屏幕） */
+      align-items: flex-start;
+      justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+      background: rgba(6, 6, 18, 0.72);
+      backdrop-filter: blur(6px);
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .contact-modal {
+      position: relative;
+      width: min(440px, 100%);
+      margin: auto;
+      border: 1px solid var(--rule);
+      border-radius: 26px;
+      padding: 34px;
+      background: linear-gradient(145deg, var(--card), var(--card2));
+      box-shadow: 0 30px 90px var(--shadow), 0 0 60px var(--glow);
+    }
+
+    .contact-modal h2 {
+      margin-bottom: 10px;
+      font-size: 1.6rem;
+    }
+
+    .contact-sub {
+      color: var(--muted);
+      margin: 0 0 22px;
+    }
+
+    .contact-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 50%;
+      background: var(--card2);
+      color: var(--muted);
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .contact-close:hover {
+      color: var(--ink);
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .contact-form input {
+      padding: 14px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--rule);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .contact-form input::placeholder {
+      color: var(--soft);
+    }
+
+    .contact-form input:focus {
+      outline: none;
+      border-color: var(--accent2);
+      box-shadow: 0 0 0 3px var(--glow);
+    }
+
+    .contact-form .cta-btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .contact-privacy {
+      margin-top: 12px;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .contact-msg {
+      margin-top: 4px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      min-height: 1.4em;
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 6px;
+      padding: 5px;
+      margin-bottom: 20px;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      background: rgba(12, 12, 30, 0.55);
+    }
+
+    .auth-tab {
+      flex: 1 1 0;
+      padding: 10px 12px;
+      border: none;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .auth-tab:hover {
+      color: var(--ink);
+    }
+
+    .auth-tab.is-active {
+      color: #0b0b16;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+    }
+
+    .auth-pane {
+      display: none;
+    }
+
+    .auth-pane.is-active {
+      display: block;
+    }
+
+    .zhihu-lead {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .zhihu-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 18px;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    .zhihu-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--glow);
+    }
+
+    .zhihu-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .zhihu-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: #0084ff;
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
     .footer {
       padding: 54px 0 70px;
       color: var(--muted);
@@ -681,6 +879,72 @@
 
     .footer strong {
       color: var(--ink);
+    }
+
+    .contact-me {
+      padding: 64px 0 72px;
+      border-top: 1px solid var(--rule);
+      background: linear-gradient(180deg, rgba(167, 139, 250, 0.06), transparent 60%);
+    }
+
+    .contact-me .page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+    }
+
+    .contact-me .cm-kicker {
+      font-size: 0.8rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent2);
+    }
+
+    .contact-me h2 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .contact-me .cm-sub {
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .contact-me .cm-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .contact-me .cm-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 22px;
+      background: var(--card);
+      border: 1px solid var(--rule);
+      border-radius: 14px;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 1.02rem;
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
+
+    .contact-me .cm-item:hover {
+      border-color: var(--accent2);
+      box-shadow: 0 8px 30px var(--glow);
+      transform: translateY(-2px);
+    }
+
+    .contact-me .cm-item .cm-icon {
+      font-size: 1.2rem;
     }
 
     @media (max-width: 980px) {
@@ -786,7 +1050,7 @@
         <a href="#flow">五步流程</a>
         <a href="#visual">视觉交互</a>
         <a href="#value">价值</a>
-        <a href="https://zhimacoder.com/nextStart/server/" class="cta-btn">🚀 立即体验</a>
+        <a href="/app" class="cta-btn">🚀 立即体验</a>
       </div>
     </nav>
 
@@ -802,7 +1066,7 @@
           <span>点击星球，即可查看你的专属星际航线（学习路径）！</span>
         </div>
         <div class="hero-actions">
-          <a class="button primary" href="https://zhimacoder.com/nextStart/server/">🚀 立即体验</a>
+          <a class="button primary" href="/app">🚀 立即体验</a>
           <a class="button" href="#flow">查看产品流程</a>
         </div>
       </div>
@@ -857,7 +1121,7 @@
       <div class="page">
         <div class="section-header">
           <div class="section-kicker">Core Logic</div>
-          <h2>用兴趣、专业、能力三要素推荐职业方向。</h2>
+          <h2>用兴趣适配、专业匹配、难度评估三要素推荐职业方向。</h2>
           <p>
             产品的底层评估体系围绕 <mark class="key">兴趣适配度</mark>、<mark class="key">专业匹配度</mark> 和 <mark class="key">实现难度</mark> 三个维度展开，生成与用户背景高度相关的职业推荐。
           </p>
@@ -900,19 +1164,21 @@
           <article class="card">
             <div class="icon">01</div>
             <h3>年级</h3>
-            <p>选择当前所处年级（大一至大四、毕业1年内），系统根据年级阶段推荐合适的学习路径。</p>
+            <p>选择当前所处阶段（准大学生、大一至大四、研究生、毕业1年内），系统根据所处阶段推荐合适的学习路径。</p>
             <div class="pill-row">
+              <span class="pill">准大学生</span>
               <span class="pill">大一</span>
               <span class="pill">大二</span>
               <span class="pill">大三</span>
               <span class="pill">大四</span>
+              <span class="pill">研究生</span>
               <span class="pill">毕业1年内</span>
             </div>
           </article>
           <article class="card">
             <div class="icon">02</div>
             <h3>专业大类</h3>
-            <p>从15个专业大类中选择（计算机与信息技术、经济与金融、艺术设计等），为职业推荐提供专业背景参考。</p>
+            <p>从16个专业类别中选择（计算机与信息技术、经济与金融、艺术设计等），为职业推荐提供专业背景参考。</p>
             <div class="pill-row">
               <span class="pill">计算机与信息技术</span>
               <span class="pill">经济与金融</span>
@@ -1013,7 +1279,7 @@
           <article class="step">
             <div class="step-number">03</div>
             <h3>学习路线</h3>
-            <p>输入对职业的了解、已学技能和目标成就，生成个性化学习路线图（支持缩放20%-500%和拖拽平移）和课程资源汇总。</p>
+            <p>查看职业介绍与知友真实从业感受，可一键快速生成学习路线，也可深度定制（填写已掌握技能与目标成就），路线图支持缩放（20%-500%）与拖拽平移，附课程资源汇总。</p>
             <div class="mini-screen">
               <div class="screen-line mid"></div>
               <div class="screen-line short"></div>
@@ -1035,7 +1301,7 @@
           <article class="step">
             <div class="step-number">05</div>
             <h3>规划报告</h3>
-            <p>系统输出方向锚点、适配依据、核心路径、行动清单和避坑建议，可复制保存。</p>
+            <p>系统输出方向锚点、适配依据、核心路径、行动清单和避坑建议五大板块，支持导出 PDF 保存，也可重新生成或返回修改。</p>
             <div class="mini-screen">
               <div class="screen-line mid"></div>
               <div class="screen-line"></div>
@@ -1076,7 +1342,7 @@
               <span class="legend-dot" style="--tone: var(--accent3);"></span>
               <div>
                 <strong>点击行星 = 展开学习路线</strong>
-                <span>进入职业详情页，输入对职业的了解、已学技能和目标成就，生成个性化学习路线图和课程资源汇总。</span>
+                <span>进入职业详情页，查看 AI 生成的职业介绍与「来自知友的真实感受」（知乎真实从业者分享），随后可快速生成或深度定制个性化学习路线图，附课程资源汇总。</span>
               </div>
             </div>
             <div class="legend-item">
@@ -1220,14 +1486,197 @@
     </section>
   </main>
 
+  <div class="modal-overlay" id="contact-overlay">
+    <div class="contact-modal">
+      <button class="contact-close" id="contact-close" aria-label="关闭">×</button>
+      <h2>留下联系方式，开启你的专属规划</h2>
+      <p class="contact-sub">任选一种方式登录，即可进入体验。</p>
+
+      <div class="auth-tabs" role="tablist">
+        <button type="button" class="auth-tab is-active" id="tab-phone" data-pane="pane-phone" role="tab" aria-selected="true">手机号</button>
+        <button type="button" class="auth-tab" id="tab-zhihu" data-pane="pane-zhihu" role="tab" aria-selected="false">知乎登录</button>
+      </div>
+
+      <div class="auth-pane is-active" id="pane-phone" role="tabpanel" aria-labelledby="tab-phone">
+        <form class="contact-form" id="contact-form">
+          <input type="text" id="contact-name" name="name" placeholder="如何称呼您" autocomplete="name" required />
+          <input type="tel" id="contact-phone" name="phone" placeholder="手机号" pattern="1[0-9]{10}" maxlength="11" autocomplete="tel" required />
+          <button type="submit" class="cta-btn">提交并进入体验</button>
+          <p class="contact-privacy">我们仅收集姓名与手机号用于记录您的来访，不会用于其他用途。如需删除或咨询，请联系 at17718585803@163.com。</p>
+          <div class="contact-msg" id="contact-msg" role="status"></div>
+        </form>
+      </div>
+
+      <div class="auth-pane" id="pane-zhihu" role="tabpanel" aria-labelledby="tab-zhihu">
+        <p class="zhihu-lead">用知乎账号一键登录，我们只会读取你的知乎昵称、头像与主页地址。</p>
+        <button type="button" class="zhihu-btn" id="zhihu-login-btn">
+          <span class="zhihu-logo" aria-hidden="true">知</span>
+          <span id="zhihu-btn-text">使用知乎账号登录</span>
+        </button>
+        <p class="contact-privacy">我们不会读取、发布或修改你的任何知乎内容。如需删除或咨询，请联系 at17718585803@163.com。</p>
+        <div class="contact-msg" id="zhihu-msg" role="status"></div>
+      </div>
+    </div>
+  </div>
+
   <footer class="footer">
     <div class="page">
       <p><strong>点亮下一个星星</strong> 是一款以星际探索为隐喻的大学生职业规划与学习路线生成工具。</p>
       <p>它想做的不是替学生决定人生，而是把每一种可能的路径照亮，让下一步更清晰。</p>
       <div style="margin-top: 24px;">
-        <a href="https://zhimacoder.com/nextStart/server/" class="cta-btn">🚀 立即体验</a>
+        <a href="/app" class="cta-btn">🚀 立即体验</a>
       </div>
     </div>
   </footer>
+
+  <section class="contact-me" id="contact-me">
+    <div class="page">
+      <div class="cm-kicker">Contact</div>
+      <h2>联系我们</h2>
+      <p class="cm-sub">对「点亮下一个星星」有任何想法、合作意向或使用疑问，欢迎随时联系。</p>
+      <div class="cm-list">
+        <a class="cm-item" href="tel:17718585803">
+          <span class="cm-icon">📞</span> 17718585803
+        </a>
+        <a class="cm-item" href="mailto:at17718585803@163.com">
+          <span class="cm-icon">✉️</span> at17718585803@163.com
+        </a>
+        <a class="cm-item" href="tel:19203061536">
+          <span class="cm-icon">📞</span> 19203061536
+        </a>
+        <a class="cm-item" href="mailto:xm19203061536@163.com">
+          <span class="cm-icon">✉️</span> xm19203061536@163.com
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    var __BASE__ = (function(){var s=location.pathname.split('/')[1]||'';return ['nextstar','nextster','zhihunextstar'].indexOf(s)>=0?'/'+s:'';})();
+    var overlay = document.getElementById('contact-overlay');
+
+    function openModal() {
+      overlay.classList.add('show');
+    }
+
+    function activatePane(paneId) {
+      document.querySelectorAll('.auth-tab').forEach(function (t) {
+        var on = t.getAttribute('data-pane') === paneId;
+        t.classList.toggle('is-active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      document.querySelectorAll('.auth-pane').forEach(function (p) {
+        p.classList.toggle('is-active', p.id === paneId);
+      });
+    }
+
+    document.querySelectorAll('a[href="/app"]').forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        openModal();
+      });
+    });
+
+    document.getElementById('contact-close').addEventListener('click', function () {
+      overlay.classList.remove('show');
+    });
+
+    document.querySelectorAll('.auth-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var paneId = tab.getAttribute('data-pane');
+        activatePane(paneId);
+        if (paneId === 'pane-zhihu') { checkZhihu(); }
+      });
+    });
+
+    // ===== 知乎登录 =====
+    var zhihuBtn = document.getElementById('zhihu-login-btn');
+    var zhihuBtnText = document.getElementById('zhihu-btn-text');
+    var zhihuMsg = document.getElementById('zhihu-msg');
+    var zhihuEnabled = false;
+    var zhihuPromise = null;
+
+    function setZhihuMsg(text, color) {
+      zhihuMsg.textContent = text || '';
+      zhihuMsg.style.color = color || '';
+    }
+
+    function checkZhihu() {
+      if (zhihuPromise) { return zhihuPromise; }
+      zhihuBtn.disabled = true;
+      zhihuBtnText.textContent = '正在检查...';
+      zhihuPromise = fetch(__BASE__ + '/api/auth/zhihu/status', { cache: 'no-store' })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          zhihuEnabled = !!(d && d.enabled);
+        })
+        .catch(function () {
+          zhihuEnabled = false;
+          zhihuPromise = null;  // 允许下次重试
+        })
+        .then(function () {
+          if (zhihuEnabled) {
+            zhihuBtn.disabled = false;
+            zhihuBtnText.textContent = '使用知乎账号登录';
+            setZhihuMsg('', '');
+          } else {
+            zhihuBtn.disabled = true;
+            zhihuBtnText.textContent = '知乎登录暂未开放';
+            setZhihuMsg('知乎登录正在申请接入中，请先切换到「手机号」提交。', '#fbbf24');
+          }
+        });
+      return zhihuPromise;
+    }
+
+    zhihuBtn.addEventListener('click', function () {
+      if (!zhihuEnabled) { checkZhihu(); return; }
+      setZhihuMsg('正在跳转到知乎授权页...', '#a78bfa');
+      window.location.href = __BASE__ + '/api/auth/zhihu/start?base=' + encodeURIComponent(__BASE__);
+    });
+
+    // ===== 手机号表单 =====
+    document.getElementById('contact-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var name = document.getElementById('contact-name').value.trim();
+      var phone = document.getElementById('contact-phone').value.trim();
+      var msg = document.getElementById('contact-msg');
+
+      try {
+        var res = await fetch(__BASE__ + '/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name, phone: phone })
+        });
+        var data = await res.json();
+        if (data.code === 0) {
+          msg.textContent = '提交成功，正在进入体验...';
+          msg.style.color = '#4ade80';
+          setTimeout(function () { window.location.href = __BASE__ + '/app'; }, 700);
+        } else {
+          msg.textContent = data.msg || '提交失败，请重试';
+          msg.style.color = '#ef4444';
+        }
+      } catch (err) {
+        msg.textContent = '网络错误，请稍后再试';
+        msg.style.color = '#ef4444';
+      }
+    });
+
+    // ===== 知乎回跳：?zhihu_error=xxx =====
+    (function () {
+      var zerr = null;
+      try {
+        zerr = new URLSearchParams(window.location.search).get('zhihu_error');
+      } catch (e) {
+        zerr = null;
+      }
+      if (!zerr) { return; }
+      openModal();
+      activatePane('pane-zhihu');
+      checkZhihu().then(function () {
+        setZhihuMsg(zerr, '#ef4444');
+      });
+    })();
+  </script>
 </body>
 </html>

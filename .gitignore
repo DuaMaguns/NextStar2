@@ -26,3 +26,14 @@ Thumbs.db
 
 # Python embedded environment
 python_embed/
+
+# Deploy tooling (contains server credentials - NEVER commit)
+_deploy/
+refactor/
+
+# Runtime data (contact form submissions)
+data/
+*.db
+
+# Backup files
+*.bak-*

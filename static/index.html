@@ -12,6 +12,25 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        ::selection {
+            background: rgba(167, 139, 250, 0.35);
+            color: #fff;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        select:focus-visible,
+        input:focus-visible,
+        textarea:focus-visible {
+            outline: 2px solid rgba(167, 139, 250, 0.7);
+            outline-offset: 2px;
+        }
+
+        option {
+            background: #1e293b;
+            color: #f1f5f9;
+        }
         
         html, body {
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
@@ -117,6 +136,7 @@
         .subtitle {
             color: #94a3b8;
             font-size: 16px;
+            letter-spacing: 1px;
         }
         
         .nav-bar {
@@ -155,12 +175,14 @@
             height: 15px;
             border-radius: 50%;
             background: #334155;
+            border: 2px solid rgba(148, 163, 184, 0.3);
             transition: all 0.3s ease;
         }
-        
+
         .progress-step.active::before {
             background: linear-gradient(135deg, #a78bfa, #60a5fa);
-            box-shadow: 0 0 10px rgba(167, 139, 250, 0.6);
+            border-color: rgba(167, 139, 250, 0.5);
+            box-shadow: 0 0 12px rgba(167, 139, 250, 0.7), 0 0 24px rgba(167, 139, 250, 0.3);
         }
         
         .step-label {
@@ -196,6 +218,8 @@
             font-weight: 600;
             margin-bottom: 20px;
             color: #f1f5f9;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 12px rgba(167, 139, 250, 0.15);
         }
         
         .form-group {
@@ -212,18 +236,38 @@
         .form-select, .form-input, .form-textarea {
             width: 100%;
             padding: 12px 16px;
-            background: rgba(30, 41, 59, 0.6);
+            background: rgba(30, 41, 59, 0.55);
             border: 1px solid #475569;
             border-radius: 10px;
             color: #fff;
             font-size: 14px;
-            transition: all 0.3s ease;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
         }
-        
+
+        .form-select:hover, .form-input:hover, .form-textarea:hover {
+            border-color: #64748b;
+            background: rgba(30, 41, 59, 0.7);
+        }
+
+        .form-select {
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 40px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            cursor: pointer;
+        }
+
         .form-select:focus, .form-input:focus, .form-textarea:focus {
             outline: none;
             border-color: #a78bfa;
-            box-shadow: 0 0 20px rgba(167, 139, 250, 0.2);
+            background: rgba(30, 41, 59, 0.8);
+            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15), 0 0 20px rgba(167, 139, 250, 0.15);
+        }
+
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: #64748b;
         }
         
         .form-textarea {
@@ -243,60 +287,74 @@
             border-radius: 10px;
             font-size: 16px;
             font-weight: 500;
+            letter-spacing: 0.3px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
             border: none;
         }
-        
+
+        .btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
         .btn-primary {
             background: linear-gradient(135deg, #a78bfa, #60a5fa);
             color: #fff;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 15px rgba(167, 139, 250, 0.25);
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(167, 139, 250, 0.4);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 12px 32px rgba(167, 139, 250, 0.45);
         }
-        
+
         .btn-primary:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
-        
+
         .btn-secondary {
             background: rgba(71, 85, 105, 0.5);
             color: #cbd5e1;
             border: 1px solid #475569;
         }
-        
+
         .btn-secondary:hover {
-            background: rgba(71, 85, 105, 0.7);
+            background: rgba(71, 85, 105, 0.75);
+            border-color: #64748b;
+            transform: translateY(-2px);
         }
-        
+
         .btn-outline {
             background: transparent;
             color: #a78bfa;
-            border: 1px solid #a78bfa;
+            border: 1px solid rgba(167, 139, 250, 0.6);
         }
-        
+
         .btn-outline:hover {
-            background: rgba(167, 139, 250, 0.1);
+            background: rgba(167, 139, 250, 0.12);
+            border-color: #a78bfa;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(167, 139, 250, 0.15);
         }
         
         .question-card {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid #475569;
-            border-radius: 12px;
+            background: rgba(30, 41, 59, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 14px;
             padding: 20px;
             margin-bottom: 20px;
-            transition: all 0.3s ease;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
         }
-        
+
         .question-card:hover {
-            border-color: #a78bfa;
-            box-shadow: 0 4px 20px rgba(167, 139, 250, 0.1);
+            border-color: rgba(167, 139, 250, 0.5);
+            box-shadow: 0 8px 24px rgba(167, 139, 250, 0.12);
+            transform: translateY(-2px);
         }
         
         .question-number {
@@ -364,12 +422,15 @@
         }
         
         .report-content {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid #475569;
-            border-radius: 12px;
-            padding: 30px;
+            background: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 16px;
+            padding: 32px;
             margin-bottom: 30px;
             min-height: 400px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
         }
         
         .report-content h1 { color: #a78bfa; margin-bottom: 20px; font-size: 24px; }
@@ -380,26 +441,34 @@
         .report-content li { margin-bottom: 6px; }
         .report-content strong { color: #f1f5f9; }
         .report-content blockquote { border-left: 4px solid #a78bfa; padding-left: 16px; margin: 16px 0; color: #94a3b8; background: rgba(167, 139, 250, 0.05); padding: 12px 16px; border-radius: 0 8px 8px 0; }
+        .report-content table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+        .report-content th { background: rgba(167, 139, 250, 0.15); color: #c4b5fd; padding: 10px 12px; border: 1px solid #475569; text-align: left; font-weight: 600; }
+        .report-content td { padding: 10px 12px; border: 1px solid #334155; color: #cbd5e1; line-height: 1.6; }
+        .report-content tbody tr:nth-child(even) td { background: rgba(51, 65, 85, 0.25); }
         
         .toast {
             position: fixed;
             bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(30, 41, 59, 0.95);
-            border: 1px solid #475569;
-            border-radius: 10px;
-            padding: 16px 24px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 12px;
+            padding: 14px 24px;
             color: #cbd5e1;
             font-size: 14px;
             z-index: 200;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease;
             pointer-events: none;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
         }
-        
+
         .toast.show {
             opacity: 1;
+            transform: translateX(-50%) translateY(-4px);
         }
         
         .toast.success {
@@ -410,6 +479,86 @@
         .toast.error {
             border-color: #ef4444;
             color: #ef4444;
+        }
+        
+        /* ===== 服务异常提示弹窗 ===== */
+        .service-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .service-modal-overlay.show {
+            display: flex;
+        }
+        
+        .service-modal {
+            background: #1e293b;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 16px;
+            padding: 28px 32px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        
+        .service-modal-icon {
+            font-size: 44px;
+            margin-bottom: 12px;
+        }
+        
+        .service-modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 12px;
+        }
+        
+        .service-modal-text {
+            font-size: 14px;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        
+        .service-modal-contact {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+        }
+        
+        .service-modal-contact a {
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .service-modal-contact a:hover {
+            text-decoration: underline;
+        }
+        
+        .service-modal-btn {
+            background: #7c3aed;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 32px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .service-modal-btn:hover {
+            background: #6d28d9;
         }
         
         .empty-state {
@@ -428,12 +577,13 @@
             position: relative;
             width: 100%;
             height: 500px;
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px solid #475569;
-            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 16px;
             margin-bottom: 20px;
             overflow: hidden;
             cursor: grab;
+            box-shadow: inset 0 0 60px rgba(12, 12, 30, 0.6), 0 12px 40px rgba(0, 0, 0, 0.25);
         }
         
         .star-map-container:active {
@@ -555,9 +705,11 @@
         
         .star-tooltip {
             position: fixed;
-            background: rgba(30, 41, 59, 0.95);
-            border: 1px solid #475569;
-            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 10px;
             padding: 12px;
             font-size: 13px;
             color: #f1f5f9;
@@ -565,7 +717,7 @@
             z-index: 10000;
             min-width: 200px;
             max-width: 300px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
         }
         
         .star-tooltip .tooltip-title {
@@ -594,10 +746,12 @@
             flex-direction: column;
             gap: 16px;
             margin-bottom: 20px;
-            padding: 20px;
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 12px;
-            border: 1px solid rgba(167, 139, 250, 0.2);
+            padding: 22px;
+            background: rgba(30, 41, 59, 0.45);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 14px;
+            border: 1px solid rgba(167, 139, 250, 0.25);
         }
         
         .legend-item {
@@ -631,24 +785,53 @@
             max-width: 600px;
         }
 
+        .legend-desc strong {
+            color: #c3ccdb;
+            font-weight: 600;
+        }
+
         .career-list {
             max-height: 300px;
             overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(167, 139, 250, 0.4) transparent;
+            padding-right: 4px;
+        }
+
+        .career-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .career-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .career-list::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.35);
+            border-radius: 3px;
+        }
+
+        .career-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(167, 139, 250, 0.6);
         }
         
         .career-item {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid #475569;
-            border-radius: 10px;
+            background: rgba(30, 41, 59, 0.55);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 12px;
             padding: 16px;
             margin-bottom: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
         }
-        
+
         .career-item:hover {
-            border-color: #a78bfa;
-            box-shadow: 0 4px 20px rgba(167, 139, 250, 0.1);
+            border-color: rgba(167, 139, 250, 0.55);
+            background: rgba(30, 41, 59, 0.75);
+            box-shadow: 0 8px 24px rgba(167, 139, 250, 0.15);
+            transform: translateY(-2px);
         }
         
         .career-item .career-name {
@@ -693,19 +876,136 @@
         
         .learning-tree-container {
             position: relative;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid #475569;
-            border-radius: 12px;
+            background: rgba(30, 41, 59, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 16px;
             padding: 20px;
             min-height: 450px;
             max-height: calc(100vh - 320px);
             overflow: auto;
             scrollbar-width: none;
             -ms-overflow-style: none;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
         }
 
         .learning-tree-container::-webkit-scrollbar {
             display: none;
+        }
+
+        /* ===== 学习路线图：放大到整个页面查看 ===== */
+        .learning-tree-container.tree-fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9990;
+            height: 100vh;
+            height: 100dvh;
+            max-height: none;
+            min-height: 0;
+            border: none;
+            border-radius: 0;
+            padding: 16px 20px 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: rgba(15, 23, 42, 0.985);
+            box-shadow: none;
+            animation: treeFsIn 0.22s ease-out;
+        }
+
+        .learning-tree-container.tree-fullscreen .tree-hint {
+            display: none;
+        }
+
+        .learning-tree-container.tree-fullscreen #learning_tree {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .learning-tree-container.tree-fullscreen .zoom-controls {
+            top: 96px;
+            right: 24px;
+        }
+
+        body.tree-fs-open {
+            overflow: hidden;
+        }
+
+        @keyframes treeFsIn {
+            from { opacity: 0; transform: scale(0.985); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .learning-tree-container.tree-fullscreen {
+                padding: 12px 12px 14px;
+            }
+            .learning-tree-container.tree-fullscreen .zoom-controls {
+                top: 88px;
+                right: 14px;
+            }
+        }
+
+        .feelings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 360px;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .feelings-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .feeling-item {
+            display: block;
+            padding: 14px 16px;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(34, 197, 94, 0.15);
+            border-radius: 12px;
+            text-decoration: none;
+            transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .feeling-item:hover {
+            border-color: rgba(34, 197, 94, 0.5);
+            background: rgba(30, 41, 59, 0.75);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(34, 197, 94, 0.1);
+        }
+
+        .feeling-title {
+            color: #e2e8f0;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .feeling-text {
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .feeling-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: #64748b;
         }
 
         .course-links-header {
@@ -729,16 +1029,19 @@
         }
 
         .course-link-card {
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid #475569;
+            background: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.25);
             border-radius: 12px;
             padding: 15px;
-            transition: all 0.3s ease;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
         }
 
         .course-link-card:hover {
-            border-color: #a78bfa;
-            box-shadow: 0 4px 20px rgba(167, 139, 250, 0.3);
+            border-color: rgba(167, 139, 250, 0.55);
+            box-shadow: 0 8px 24px rgba(167, 139, 250, 0.2);
+            transform: translateY(-2px);
         }
 
         .course-link-title {
@@ -863,6 +1166,70 @@
             .star-map-hint .pulse-dot {
                 width: 9px;
                 height: 9px;
+            }
+        }
+
+        /* ===== 加载等待时的轮换金句（星际诗意 · 职业规划）===== */
+        .orbit-quote {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 24px 0 0;
+            padding: 0 12px;
+            width: min(620px, 88vw);
+            min-height: 72px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .loading-overlay.active .orbit-quote {
+            animation: orbitQuoteIn 0.5s ease both;
+        }
+
+        @keyframes orbitQuoteIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .orbit-quote__icon {
+            color: rgba(148, 163, 184, 0.45);
+            font-size: 12.5px;
+            line-height: 1;
+            flex-shrink: 0;
+            animation: orbitIconPulse 3.4s ease-in-out infinite;
+        }
+
+        .orbit-quote__text {
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: rgba(148, 163, 184, 0.62);
+            letter-spacing: 0.3px;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .orbit-quote__text.is-fading {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+
+        @keyframes orbitIconPulse {
+            0%, 100% { opacity: 0.35; transform: scale(0.96); }
+            50% { opacity: 0.7; transform: scale(1.06); }
+        }
+
+        @media (max-width: 768px) {
+            .orbit-quote {
+                margin-top: 18px;
+                padding: 0 10px;
+                gap: 8px;
+                width: min(620px, 92vw);
+                min-height: 84px;
+            }
+            .orbit-quote__text {
+                font-size: 12.5px;
             }
         }
 
@@ -1033,13 +1400,25 @@
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 4;
+            -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
-            max-height: 90px;
+            max-height: 68px;
             text-align: center;
             text-shadow: 0 1px 3px rgba(0,0,0,0.5);
             width: 100%;
             flex-shrink: 0;
+        }
+        
+        .node-stage {
+            font-size: 11px;
+            color: #a9b6cf;
+            letter-spacing: 0.2px;
+            margin-bottom: 6px;
+            line-height: 1.4;
+            text-align: center;
+            width: 100%;
+            flex-shrink: 0;
+            opacity: 0.85;
         }
         
         .tree-node .node-metrics {
@@ -1177,14 +1556,16 @@
         .global-tooltip {
             display: none;
             position: fixed;
-            background: rgba(15, 23, 42, 0.98);
-            border: 1px solid #475569;
-            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 14px;
             padding: 16px 20px;
             min-width: 280px;
             max-width: 400px;
             z-index: 9999;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
             pointer-events: none;
             overflow-y: auto;
             overflow-x: hidden;
@@ -1229,7 +1610,527 @@
             .star-tooltip .tooltip-title { font-size: 12px; margin-bottom: 4px; }
             .zoom-controls { top: 160px; }
         }
+
+        /* ===== 学习路线：三阶段并排成树 ===== */
+        .ln-phase-panel {
+            position: absolute;
+            z-index: 0;
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(51, 65, 85, 0.26), rgba(30, 41, 59, 0.34));
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .ln-phase-panel::before {
+            content: '';
+            position: absolute;
+            left: 14px;
+            right: 14px;
+            top: 0;
+            height: 2px;
+            border-radius: 0 0 2px 2px;
+            background: linear-gradient(90deg, rgba(167, 139, 250, 0.8), rgba(96, 165, 250, 0.25));
+        }
+
+        .ln-phase-head {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 16px;
+            box-sizing: border-box;
+        }
+
+        .ln-phase-no {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: #0f172a;
+            background: linear-gradient(135deg, #a78bfa, #60a5fa);
+        }
+
+        .ln-phase-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: #ddd6fe;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .ln-phase-meta {
+            margin-left: auto;
+            font-size: 11.5px;
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+
+        .ln-card {
+            padding: 10px 12px 12px;
+            border-radius: 14px;
+        }
+
+        .ln-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            height: 20px;
+            margin-bottom: 6px;
+            flex-shrink: 0;
+        }
+
+        .ln-badge {
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            box-sizing: border-box;
+            border-radius: 7px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #c4b5fd;
+            background: rgba(167, 139, 250, 0.16);
+            border: 1px solid rgba(167, 139, 250, 0.4);
+        }
+
+        .ln-card .node-name {
+            font-size: 13px;
+            line-height: 1.45;
+            margin-bottom: 4px;
+            -webkit-line-clamp: 2;
+            max-height: 40px;
+        }
+
+        .ln-card .node-stage {
+            font-size: 10.5px;
+            margin-bottom: 5px;
+        }
+
+        .ln-card .node-metrics {
+            gap: 6px;
+            padding: 0;
+        }
+
+        .ln-card .metric {
+            padding: 3px 7px;
+            min-width: 0;
+            gap: 1px;
+            border-radius: 8px;
+        }
+
+        .ln-card .metric .label { font-size: 10px; }
+        .ln-card .metric .value { font-size: 11.5px; }
+
+        .ln-legend {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 14px;
+            margin: -2px 0 12px;
+            padding-right: 64px;
+            font-size: 11.5px;
+            color: #94a3b8;
+        }
+
+        .ln-legend .lg-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+
+        .ln-legend .lg-solid,
+        .ln-legend .lg-dash {
+            display: inline-block;
+            width: 26px;
+            height: 0;
+            border-top: 2px solid #6366f1;
+        }
+
+        .ln-legend .lg-dash {
+            border-top-style: dashed;
+            border-top-color: #a78bfa;
+        }
+
+        .learning-tree-container.tree-fullscreen .ln-legend {
+            display: none;
+        }
+
     </style>
+
+<style id="v2-pod-theme">
+/* ============ V2 POD VISUAL THEME — atomic overlay (no content changes) ============ */
+:root{
+  --pod-ink:#070b18;
+  --pod-navy:#0d1530;
+  --pod-cyan:#22d3ee;
+  --pod-violet:#a78bfa;
+  --pod-amber:#fbbf24;
+  --pod-text:#e8eefc;
+  --pod-muted:#93a4c4;
+  --pod-glass:rgba(16,24,50,0.55);
+  --pod-glass-2:rgba(13,20,42,0.6);
+  --pod-line:rgba(120,160,230,0.16);
+  --pod-radius:16px;
+}
+
+/* ---- deeper ink/navy base + corner aurora (replaces previous gradient) ---- */
+html, body{
+  background:
+    radial-gradient(1200px 720px at 10% -12%, rgba(34,211,238,0.12), transparent 60%),
+    radial-gradient(1000px 820px at 100% 0%, rgba(167,139,250,0.14), transparent 55%),
+    radial-gradient(900px 720px at 50% 122%, rgba(251,191,36,0.06), transparent 60%),
+    linear-gradient(160deg, #070b18 0%, #0b1228 46%, #070a16 100%) fixed;
+}
+
+/* ---- fixed tech grid (static, cheap) ---- */
+body::before{
+  content:"";
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(120,160,230,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120,160,230,0.05) 1px, transparent 1px);
+  background-size:46px 46px;
+  -webkit-mask-image:radial-gradient(circle at 50% 28%, #000 0%, transparent 82%);
+          mask-image:radial-gradient(circle at 50% 28%, #000 0%, transparent 82%);
+}
+
+/* ---- fine noise + corner glows (static) ---- */
+body::after{
+  content:"";
+  position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.55;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E"),
+    radial-gradient(620px 420px at 0% 0%, rgba(34,211,238,0.10), transparent 60%),
+    radial-gradient(720px 520px at 100% 100%, rgba(167,139,250,0.10), transparent 60%);
+  background-size:160px 160px, auto, auto;
+  mix-blend-mode:screen;
+}
+
+/* ============ HERO (first screen focus) ============ */
+.header{
+  position:relative;
+  padding:36px 28px 30px;
+  border-radius:24px;
+  background:linear-gradient(180deg, rgba(20,30,62,0.55), rgba(12,18,40,0.32));
+  border:1px solid var(--pod-line);
+  box-shadow:
+    inset 0 0 0 1px rgba(34,211,238,0.06),
+    0 22px 70px rgba(4,8,20,0.55),
+    0 0 60px rgba(34,211,238,0.06);
+  backdrop-filter:blur(9px);
+  -webkit-backdrop-filter:blur(9px);
+  overflow:hidden;
+}
+.header::before{
+  content:"";
+  position:absolute; left:8%; right:8%; top:-60%; height:220px;
+  background:radial-gradient(closest-side, rgba(34,211,238,0.22), transparent 70%);
+  filter:blur(12px);
+  pointer-events:none;
+}
+.logo{
+  position:relative;
+  font-size:42px;
+  letter-spacing:1.5px;
+  background:linear-gradient(90deg,#22d3ee,#a78bfa,#fbbf24,#a78bfa,#22d3ee);
+  background-size:220% auto;
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:pod-shimmer 5s linear infinite;
+  text-shadow:none;
+  filter:drop-shadow(0 4px 24px rgba(34,211,238,0.28));
+}
+@keyframes pod-shimmer{ to{ background-position:220% center; } }
+.subtitle{
+  position:relative;
+  color:var(--pod-muted);
+  font-size:15px;
+  letter-spacing:2px;
+  margin-top:8px;
+}
+
+/* ============ TITLE HIERARCHY ============ */
+.section-title{
+  position:relative;
+  font-size:23px;
+  font-weight:700;
+  letter-spacing:0.6px;
+  color:var(--pod-text);
+  padding-left:16px;
+  text-shadow:0 2px 18px rgba(34,211,238,0.18);
+}
+.section-title::before{
+  content:"";
+  position:absolute; left:0; top:3px; bottom:3px; width:4px;
+  border-radius:4px;
+  background:linear-gradient(180deg, var(--pod-cyan), var(--pod-violet));
+  box-shadow:0 0 14px rgba(34,211,238,0.55);
+}
+.section-subtitle{
+  position:relative;
+  color:var(--pod-cyan);
+  letter-spacing:1px;
+}
+.section-subtitle::before{
+  content:"";
+  display:inline-block; width:7px; height:7px; margin-right:8px;
+  border-radius:50%; background:var(--pod-cyan);
+  box-shadow:0 0 10px var(--pod-cyan); vertical-align:middle;
+}
+
+/* ============ INPUTS ============ */
+.form-label{ color:#cdd8f0; }
+.form-select, .form-input, .form-textarea{
+  background:var(--pod-glass-2);
+  border:1px solid rgba(120,160,230,0.22);
+  border-radius:12px;
+  color:var(--pod-text);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.form-select:hover, .form-input:hover, .form-textarea:hover{
+  border-color:rgba(34,211,238,0.5);
+  background:rgba(13,20,42,0.78);
+}
+.form-select:focus, .form-input:focus, .form-textarea:focus{
+  border-color:var(--pod-cyan);
+  background:rgba(13,20,42,0.85);
+  box-shadow:0 0 0 3px rgba(34,211,238,0.16), 0 0 22px rgba(34,211,238,0.18);
+}
+
+/* ============ BUTTONS ============ */
+.btn{
+  border-radius:13px;
+  font-weight:600;
+  letter-spacing:0.4px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.35);
+}
+.btn-primary{
+  background:linear-gradient(135deg,#22d3ee 0%,#7c5cf6 55%,#a78bfa 100%);
+  color:#04122a;
+  box-shadow:0 10px 30px rgba(34,211,238,0.28), inset 0 1px 0 rgba(255,255,255,0.42);
+}
+.btn-primary:hover{
+  box-shadow:0 16px 46px rgba(34,211,238,0.46), inset 0 1px 0 rgba(255,255,255,0.55);
+}
+.btn-secondary{
+  background:rgba(20,30,58,0.72);
+  color:var(--pod-text);
+  border:1px solid rgba(120,160,230,0.3);
+}
+.btn-secondary:hover{
+  border-color:var(--pod-cyan);
+  color:#fff;
+  box-shadow:0 10px 28px rgba(34,211,238,0.12);
+}
+.btn-outline{
+  color:var(--pod-cyan);
+  border:1px solid rgba(34,211,238,0.6);
+}
+.btn-outline:hover{
+  background:rgba(34,211,238,0.12);
+  border-color:var(--pod-cyan);
+  box-shadow:0 8px 24px rgba(34,211,238,0.2);
+}
+.btn:focus-visible{
+  outline:2px solid var(--pod-cyan);
+  outline-offset:3px;
+}
+
+/* ============ GLASS CARDS ============ */
+.question-card{
+  background:var(--pod-glass);
+  border:1px solid var(--pod-line);
+  border-radius:16px;
+  box-shadow:0 10px 30px rgba(4,8,20,0.4);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.question-card:hover{
+  border-color:rgba(34,211,238,0.55);
+  box-shadow:0 16px 44px rgba(34,211,238,0.14);
+}
+.report-content{
+  background:var(--pod-glass);
+  border:1px solid var(--pod-line);
+  border-radius:20px;
+  box-shadow:0 20px 60px rgba(4,8,20,0.5);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.legend-item{
+  background:rgba(13,20,42,0.5);
+  border:1px solid var(--pod-line);
+  border-radius:14px;
+  padding:14px 16px;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.legend-item:hover{
+  border-color:rgba(34,211,238,0.5);
+  transform:translateY(-2px);
+  box-shadow:0 12px 32px rgba(34,211,238,0.12);
+}
+
+/* ============ ROADMAP / STAR-MAP / COURSE PANELS ============ */
+.learning-tree-container{
+  background:linear-gradient(180deg, rgba(16,24,50,0.72), rgba(10,16,36,0.6));
+  border:1px solid var(--pod-line);
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 18px 54px rgba(4,8,20,0.5);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.learning-tree-container .tree-header h3,
+.course-links-header h3{
+  background:linear-gradient(90deg, var(--pod-cyan), var(--pod-violet));
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+  font-weight:700;
+}
+.star-map-container{
+  background:rgba(10,16,36,0.5);
+  border:1px solid var(--pod-line);
+  border-radius:18px;
+  min-height:320px;
+  box-shadow:inset 0 0 60px rgba(34,211,238,0.06);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+.course-links-content{
+  background:var(--pod-glass);
+  border:1px solid var(--pod-line);
+  border-radius:16px;
+  padding:18px;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+.career-list > *{
+  background:var(--pod-glass);
+  border:1px solid var(--pod-line);
+  border-radius:16px;
+  padding:16px 18px;
+  margin-bottom:14px;
+  transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.career-list > *:hover{
+  border-color:rgba(34,211,238,0.5);
+  transform:translateY(-2px);
+  box-shadow:0 14px 40px rgba(34,211,238,0.12);
+}
+
+/* ============ ZOOM / MISC CONTROLS ============ */
+.zoom-btn{
+  background:rgba(20,30,58,0.8);
+  border:1px solid var(--pod-line);
+  color:var(--pod-text);
+  border-radius:10px;
+  transition:all .2s ease;
+}
+.zoom-btn:hover{
+  border-color:var(--pod-cyan);
+  color:#fff;
+  box-shadow:0 0 16px rgba(34,211,238,0.2);
+}
+.empty-state{ color:var(--pod-muted); }
+.info-bar{
+  background:var(--pod-glass);
+  border:1px solid var(--pod-line);
+  border-radius:14px;
+  padding:14px 16px;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+
+/* ============ SERVICE MODAL GLOW ============ */
+.service-modal{
+  background:linear-gradient(180deg, rgba(18,26,54,0.96), rgba(10,16,36,0.96));
+  border:1px solid rgba(34,211,238,0.25);
+  border-radius:18px;
+  box-shadow:0 24px 70px rgba(0,0,0,0.6), 0 0 40px rgba(34,211,238,0.08);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+
+/* ============ SCROLL REVEAL (driven by v2-reveal script) ============ */
+.reveal{
+  opacity:0;
+  transform:translateY(26px);
+  filter:blur(6px);
+  transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1), filter .7s ease;
+  will-change:opacity, transform;
+}
+.reveal.is-visible{
+  opacity:1;
+  transform:none;
+  filter:none;
+}
+
+/* ============ MOBILE BREAKPOINTS ============ */
+@media (max-width: 720px){
+  .container{ padding:24px 14px; }
+  .header{ padding:24px 16px; margin-bottom:26px; }
+  .logo{ font-size:30px; }
+  .subtitle{ font-size:13px; letter-spacing:1px; }
+  .section-title{ font-size:20px; }
+  .btn-group{ flex-direction:column; }
+  .btn{ width:100%; }
+  .form-select, .form-input, .form-textarea{ padding:11px 14px; }
+  .nav-bar{ padding-top:14px; }
+  .progress-bar{ gap:6px; }
+  .step-label{ font-size:10px; top:-22px; }
+  .learning-tree-container, .star-map-container{ padding:14px; }
+  .report-content{ padding:20px; }
+}
+@media (max-width: 460px){
+  .logo{ font-size:25px; }
+  .header{ margin-bottom:20px; }
+  .section-title{ font-size:18px; }
+  .form-group{ margin-bottom:16px; }
+}
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion: reduce){
+  .reveal{ opacity:1 !important; transform:none !important; filter:none !important; transition:none !important; }
+  .logo{ animation:none !important; }
+  .header::before{ animation:none !important; }
+}
+
+</style>
+<style id="feelings-distill-overlay">
+.feel-head { display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:10px; }
+.feel-head h3 { color:#22c55e; font-size:16px; margin:0; }
+.feel-count { color:#94a3b8; font-size:11px; }
+.feel-loading { color:#94a3b8; text-align:center; padding:12px 0; }
+.kwcard-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(108px,1fr)); gap:8px; }
+.kwcard-row:empty { display:none; }
+.kwcard { position:relative; overflow:hidden; padding:10px 11px 11px; border-radius:12px; background:rgba(15,23,42,.52); border:1px solid rgba(96,165,250,.28); }
+.kwcard__word { font-size:14px; font-weight:600; color:#e2e8f0; line-height:1.25; word-break:break-all; }
+.kwcard__note { margin-top:4px; font-size:11px; color:rgba(148,163,184,.75); line-height:1.45; }
+.kwcard__bar { position:absolute; left:0; bottom:0; height:2px; border-radius:0 2px 2px 0; opacity:.7; }
+.kwcard--pos { border-color:rgba(34,197,94,.32); }
+.kwcard--neu { border-color:rgba(96,165,250,.28); }
+.kwcard--warn { border-color:rgba(245,158,11,.34); }
+.feel-summary { margin-top:10px; font-size:12.5px; color:rgba(203,213,225,.86); line-height:1.6; }
+.feel-toggle { margin-top:10px; background:none; border:0; padding:0; cursor:pointer; color:#60a5fa; font-size:12px; }
+.feel-toggle .chev { display:inline-block; transition:transform .2s ease; }
+.feel-toggle.on .chev { transform:rotate(180deg); }
+.feel-src { margin-top:10px; }
+@media (max-width:640px) { .kwcard-row { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+</style>
 </head>
 <body>
     <div class="stars" id="stars"></div>
@@ -1270,10 +2171,12 @@
                 <label class="form-label">年级 <span style="color:#ef4444;">*</span></label>
                 <select class="form-select" id="grade">
                     <option value="">请选择年级</option>
+                    <option value="准大学生">准大学生</option>
                     <option value="大一">大一</option>
                     <option value="大二">大二</option>
                     <option value="大三">大三</option>
                     <option value="大四">大四</option>
+                    <option value="研究生">研究生</option>
                     <option value="毕业1年内">毕业1年内</option>
                 </select>
             </div>
@@ -1297,6 +2200,19 @@
                     <option value="艺术设计">艺术设计</option>
                     <option value="音乐表演">音乐表演</option>
                     <option value="农林渔牧">农林渔牧</option>
+                    <option value="历史学与哲学">历史学与哲学</option>
+                    <option value="心理学">心理学</option>
+                    <option value="新闻传播与影视">新闻传播与影视</option>
+                    <option value="中医学与公共卫生">中医学与公共卫生</option>
+                    <option value="交通运输与物流">交通运输与物流</option>
+                    <option value="航空航天">航空航天</option>
+                    <option value="能源与动力">能源与动力</option>
+                    <option value="海洋与地球科学">海洋与地球科学</option>
+                    <option value="环境与生态">环境与生态</option>
+                    <option value="公安与司法">公安与司法</option>
+                    <option value="体育学">体育学</option>
+                    <option value="军事学">军事学</option>
+                    <option value="交叉学科与新兴领域">交叉学科与新兴领域</option>
                     <option value="其他">其他</option>
                 </select>
             </div>
@@ -1307,18 +2223,13 @@
             </div>
             
             <div class="form-group">
-                <label class="form-label">个人特长 <span style="color:#ef4444;">*</span></label>
-                <input type="text" class="form-input" id="skills" placeholder="请输入你的个人特长，如：编程、写作、演讲等">
+                <label class="form-label">爱好/个人特长 <span style="color:#ef4444;">*</span></label>
+                <input type="text" class="form-input" id="skills" placeholder="请输入你的爱好或个人特长，如：编程、写作、演讲、摄影、运动等">
             </div>
             
             <div class="form-group">
-                <label class="form-label">爱好 <span style="color:#ef4444;">*</span></label>
-                <input type="text" class="form-input" id="hobbies" placeholder="请输入你的爱好，如：阅读、摄影、运动等">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">期望职业 <span style="color:#ef4444;">*</span></label>
-                <input type="text" class="form-input" id="desired_career" placeholder="请输入你期望从事的职业，如：软件工程师、产品经理等">
+                <label class="form-label">期望职业 <span style="color:#94a3b8; font-weight:400; font-size:12px;">（选填）</span></label>
+                <input type="text" class="form-input" id="desired_career" placeholder="选填：请输入你期望从事的职业，如：软件工程师、产品经理等">
             </div>
             
             <div class="form-group">
@@ -1353,28 +2264,28 @@
         <div class="page" id="page2">
             <h2 class="section-title">🌌 第二步：选择你想去的星球</h2>
 
-            <p class="section-title" style="font-size: 14px; font-weight: 400; color: #94a3b8; margin-bottom: 15px;">点击星图中的行星查看职业详情并生成学习路线，也可查看下方列表</p>
+            <p class="section-title" style="font-size: 14px; font-weight: 400; color: #94a3b8; margin-bottom: 15px;">点击星图上的行星，查看职业详情并生成学习路线；也可以直接看下方列表 👇</p>
             
             <div class="legend">
                 <div class="legend-item">
                     <span class="legend-icon">📏</span>
                     <div class="legend-text">
-                        <span class="legend-label">距离代表难度</span>
-                        <span class="legend-desc">越靠近中心恒星（你）的行星，代表该职业实现难度越低，所需学习路径更短；越遥远的行星，代表实现难度越高，需要更多积累和努力。</span>
+                        <span class="legend-label">距离 = 难度</span>
+                        <span class="legend-desc">离中心（<strong>你</strong>）<strong>越近</strong>，这个职业<strong>越好实现</strong>；<strong>越远</strong>，就要<strong>付出越多努力</strong>。</span>
                     </div>
                 </div>
                 <div class="legend-item">
                     <span class="legend-icon">📐</span>
                     <div class="legend-text">
-                        <span class="legend-label">大小代表适配度</span>
-                        <span class="legend-desc">行星越大，代表该职业与你的兴趣、特长和价值观匹配度越高；行星越小，代表匹配度相对较低。选择最吸引你的那颗星吧！</span>
+                        <span class="legend-label">大小 = 适配度</span>
+                        <span class="legend-desc">行星<strong>越大</strong>，说明<strong>越适合你</strong>（兴趣、特长、价值观越匹配）；<strong>越小</strong>则<strong>匹配度越低</strong>。挑最吸引你的那颗就行 ✨</span>
                     </div>
                 </div>
             </div>
             
             <div class="star-map-hint">
                 <span class="pulse-dot"></span>
-                <span>👆 点击星球查看学习路径</span>
+                <span>👆 点一下任意星球试试</span>
             </div>
             <div class="star-map-container" id="star_map">
                 <div class="empty-state" id="star_map_empty">
@@ -1397,6 +2308,22 @@
             <div id="career_detail_title" style="margin-bottom: 12px; font-size: 20px; color: #a78bfa; font-weight: 600;">
             </div>
             <div id="career_detail_desc" style="margin-bottom: 20px; padding: 16px; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(167, 139, 250, 0.2); border-radius: 12px; font-size: 14px; color: #cbd5e1; line-height: 1.7;">
+            </div>
+            
+            <div id="zhihu_feelings_container" style="margin-bottom: 20px;">
+                <div class="feel-head">
+                    <h3>💬 来自知友的真实感受</h3>
+                    <span class="feel-count" id="zhihu_feelings_count"></span>
+                </div>
+                <div id="zhihu_feelings_status" class="feel-loading">正在搜索知友的真实感受...</div>
+                <div id="zhihu_feelings_keywords" class="kwcard-row"></div>
+                <div id="zhihu_feelings_summary" class="feel-summary" style="display:none;"></div>
+                <button type="button" class="feel-toggle" id="zhihu_feelings_toggle" style="display:none;">
+                    <span class="feel-toggle__t">原始帖子</span> <span class="chev">▾</span>
+                </button>
+                <div id="zhihu_feelings_content" class="feelings-list feel-src">
+                    <div style="color:#94a3b8; text-align:center; padding:20px;">正在搜索知友的真实感受...</div>
+                </div>
             </div>
             
             <div id="input_section">
@@ -1423,14 +2350,19 @@
                 <div class="learning-tree-container">
                     <div class="tree-header">
                         <h3 style="color: #a78bfa; margin-bottom: 0;">学习路线图</h3>
-                        <div style="display: flex; gap: 10px; flex-wrap: nowrap;">
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
+                            <button class="btn btn-secondary btn-sm" id="tree_fs_btn" onclick="toggleTreeFullscreen()" title="放大到整个页面查看（按 Esc 可退出）">⛶ 放大查看</button>
                             <button class="btn btn-secondary btn-sm" onclick="resetLearningPath()">← 重新输入</button>
                             <button class="btn btn-secondary btn-sm" onclick="generateLearningPath()">🔄 重新生成</button>
                         </div>
                     </div>
                     <div class="tree-hint">
                         <span class="hint-icon">i</span>
-                        <span>点击任意节点，即可查看该学习内容的详细信息、推荐资源与课程链接。</span>
+                        <span>三栏 = 三个阶段，按 1 → 2 → 3 顺序推进，没有跳步。每栏内部从左到右推进（实线 = 先修顺序），阶段之间用虚线衔接；悬浮任意卡片可看详细内容。</span>
+                    </div>
+                    <div class="ln-legend">
+                        <span class="lg-item"><span class="lg-solid"></span>阶段内：从左到右的先修顺序</span>
+                        <span class="lg-item"><span class="lg-dash"></span>阶段之间：虚线衔接</span>
                     </div>
                     <div class="zoom-controls">
                         <button class="zoom-btn" onclick="zoomIn()" title="放大">+</button>
@@ -1452,6 +2384,7 @@
             </div>
             
             <div class="btn-group" id="tree_next_btn" style="margin-top: 20px; justify-content: center; display: none;">
+                <button class="btn btn-secondary" id="tree_back_report_btn" onclick="goToReportPage()" style="display: none;">← 返回规划报告</button>
                 <button class="btn btn-secondary" onclick="goBackToStarMap()">← 返回星图</button>
                 <button class="btn btn-primary" onclick="goToPage3()">下一步 →</button>
             </div>
@@ -1505,7 +2438,7 @@
             <div class="btn-group">
                 <button class="btn btn-secondary" onclick="goToPage3()">← 返回修改</button>
                 <button class="btn btn-outline" onclick="exportPDF()">📄 导出PDF</button>
-                <button class="btn btn-primary" onclick="regenerateReport()">🔄 重新生成</button>
+                <button class="btn btn-primary" onclick="showLearningPathAgain()">🗺️ 学习路线再次展示</button>
             </div>
             <div class="btn-group" style="margin-top: 16px; justify-content: center;">
                 <button class="btn btn-outline" onclick="goToStarMap()">🪐 去别的星球看看</button>
@@ -1514,17 +2447,38 @@
             <div style="text-align: right; padding: 8px 0; font-size: 11px; color: rgba(148, 163, 184, 0.5);">
                 作者: 杜阿和湘湘
             </div>
+            <div style="margin-top: 4px; padding: 12px 0 8px; border-top: 1px solid rgba(148, 163, 184, 0.12); text-align: center; font-size: 12px; color: rgba(148, 163, 184, 0.55); line-height: 1.9;">
+                联系我们<br>
+                电话&nbsp;17718585803&nbsp;&nbsp;·&nbsp;&nbsp;邮箱&nbsp;at17718585803@163.com<br>
+                电话&nbsp;19203061536&nbsp;&nbsp;·&nbsp;&nbsp;邮箱&nbsp;xm19203061536@163.com
+            </div>
         </div>
     </div>
     
     <div class="loading-overlay" id="loading_overlay">
         <div class="loading-spinner"></div>
         <div class="loading-text" id="loading_text">正在为您绘制职业规划...</div>
+        <div class="orbit-quote" id="orbit_quote">
+            <span class="orbit-quote__icon">✦</span>
+            <span class="orbit-quote__text" id="orbit_quote_text">每颗星都在等一个愿意出发的人。</span>
+        </div>
     </div>
     
     <div class="toast" id="toast"></div>
     
+    <!-- 服务异常提示弹窗 -->
+    <div class="service-modal-overlay" id="service_modal_overlay">
+        <div class="service-modal">
+            <div class="service-modal-icon">⚠️</div>
+            <h3 class="service-modal-title">服务暂时不可用</h3>
+            <p class="service-modal-text">AI 服务当前暂时无法提供个性化内容，已为您展示默认结果。请联系管理员充值或检查服务状态后重试。</p>
+            <p class="service-modal-contact">联系管理员：<a href="mailto:at17718585803@163.com">at17718585803@163.com</a></p>
+            <button type="button" class="service-modal-btn" id="service_modal_btn">我知道了</button>
+        </div>
+    </div>
+    
     <script>
+        var __BASE__ = (function(){var s=location.pathname.split('/')[1]||'';return ['nextstar','nextster','zhihunextstar'].indexOf(s)>=0?'/'+s:'';})();
         function isValidUrl(str) {
             if (!str || typeof str !== 'string') return false;
             const urlRegex = /^https?:\/\/[a-zA-Z0-9][a-zA-Z0-9-]*(\.[a-zA-Z0-9][a-zA-Z0-9-]*)+([\/?][^\s<>"]*)?$/;
@@ -1591,6 +2545,19 @@
                 '艺术设计': '例如：视觉传达设计、产品设计、环境设计...',
                 '音乐表演': '例如：音乐学、音乐表演、舞蹈表演...',
                 '农林渔牧': '例如：农学、林学、畜牧学...',
+                '历史学与哲学': '例如：历史学、考古学、哲学、逻辑学...',
+                '心理学': '例如：心理学、应用心理学、认知科学...',
+                '新闻传播与影视': '例如：新闻学、传播学、广告学、广播电视编导...',
+                '中医学与公共卫生': '例如：中医学、针灸推拿学、预防医学、卫生检验与检疫...',
+                '交通运输与物流': '例如：交通运输、交通工程、物流管理、航海技术...',
+                '航空航天': '例如：飞行器设计与工程、航空航天工程、飞行技术...',
+                '能源与动力': '例如：能源与动力工程、新能源科学与工程、储能科学与工程...',
+                '海洋与地球科学': '例如：海洋科学、地质学、地球物理学、大气科学...',
+                '环境与生态': '例如：环境科学、环境工程、生态学、资源环境科学...',
+                '公安与司法': '例如：侦查学、治安学、法学（警务方向）、监狱学...',
+                '体育学': '例如：体育教育、运动训练、运动人体科学、社会体育指导与管理...',
+                '军事学': '例如：军事指挥、军事装备、军事思想...',
+                '交叉学科与新兴领域': '例如：人工智能、数据科学、集成电路、智能建造、数字人文...',
                 '其他': '请输入具体专业名称'
             };
             input.placeholder = hints[category] || '请输入具体专业名称';
@@ -1602,7 +2569,7 @@
                 major_category: document.getElementById('major_category').value,
                 major_name: document.getElementById('major_name').value,
                 skills: document.getElementById('skills').value,
-                hobbies: document.getElementById('hobbies').value,
+                hobbies: document.getElementById('skills').value,
                 desired_career: document.getElementById('desired_career').value,
                 mbti: document.getElementById('mbti').value
             };
@@ -1616,8 +2583,7 @@
                 document.getElementById('grade').value = info.grade || '';
                 document.getElementById('major_category').value = info.major_category || '';
                 document.getElementById('major_name').value = info.major_name || '';
-                document.getElementById('skills').value = info.skills || '';
-                document.getElementById('hobbies').value = info.hobbies || '';
+                document.getElementById('skills').value = info.skills || info.hobbies || '';
                 document.getElementById('desired_career').value = info.desired_career || '';
                 document.getElementById('mbti').value = info.mbti || '';
                 
@@ -1662,8 +2628,124 @@
             }
         }
         
+        function showServiceErrorModal() {
+            try {
+                const overlay = document.getElementById('service_modal_overlay');
+                if (overlay) {
+                    overlay.classList.add('show');
+                } else {
+                    alert('服务暂时不可用，请联系管理员 at17718585803@163.com');
+                }
+            } catch (error) {
+                console.error('showServiceErrorModal error:', error);
+            }
+        }
+        
+        function bindServiceModal() {
+            const overlay = document.getElementById('service_modal_overlay');
+            const btn = document.getElementById('service_modal_btn');
+            if (!overlay || !btn) return;
+            btn.addEventListener('click', function () {
+                overlay.classList.remove('show');
+            });
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) {
+                    overlay.classList.remove('show');
+                }
+            });
+        }
+        
+        // ===== 加载等待时的轮换金句（星际诗意 · 职业规划主题）=====
+        const ORBIT_QUOTES = [
+            '每颗星都在等一个愿意出发的人。',
+            '你选的不只是职业，是未来几年想待的那片天空。',
+            '不必现在就看完整条航线，先锁定一颗想去的星。',
+            '没有白走的轨道，每一次绕行都在校准方向。',
+            '星系没有唯一正确的航线，只有更适合你的那一条。',
+            '规划不是把未来钉死，而是给你一张看得懂的星图。',
+            '走得慢没关系，方向对了，光年也只是时间问题。',
+            '迷茫不是迷航，它只是抵达前必经的一段暗物质。',
+            '每一条学习航线，都是通往某颗星的燃料。',
+            '先看清自己，再看清星图——方向由内向外生长。',
+            '你不需要成为最亮的那颗星，只需要成为你自己的坐标。',
+            '星图会更新，你也会；别用现在的自己限定未来的航线。',
+            '星图上的空白，不是没有路，只是还没被照亮。',
+            '你喜欢什么，比你现在会什么更值得被认真对待。',
+            '方向是走出来的，不是等出来的。',
+            '一颗星的亮度，取决于它愿意燃烧多久。',
+            '别怕选错，轨道可以修正；停着不动，才是最远的距离。',
+            '你的爱好不是消遣，是航线上的导航仪。',
+            '每一门课，都是离某颗星更近的一小步。',
+            '不是每条航线都有攻略，但每条路都会留下坐标。',
+            '看清自己的引力，才知道该飞向哪片星域。',
+            '专业不是牢笼，它是你起飞的第一级推进器。',
+            '现在做的每件事，都在为几年后的自己标定坐标。',
+            '星图上最远的星，也要从第一步开始靠近。',
+            '不是所有星光都指向终点，但每一束都在照路。',
+            '你现在犹豫的样子，也是在认真对待未来。',
+            '职业不是一次选定的星座，而是慢慢连成的航线。',
+            '想不清楚也没关系，先走一步，星图会跟着亮起来。',
+            '你不需要看清整片宇宙，只要找到下一颗星。',
+            '别把别人的航线，当成自己的标准答案。'
+        ];
+        let _orbitQuoteTimer = null;
+        let _orbitQuoteFadeTimer = null;
+        let _orbitQuoteIdx = 0;
+
+        function startOrbitQuotes() {
+            if (_orbitQuoteTimer) return;
+            const el = document.getElementById('orbit_quote_text');
+            if (!el || !ORBIT_QUOTES.length) return;
+
+            _orbitQuoteIdx = Math.floor(Math.random() * ORBIT_QUOTES.length);
+            el.textContent = ORBIT_QUOTES[_orbitQuoteIdx];
+            el.classList.remove('is-fading');
+
+            _orbitQuoteTimer = setInterval(() => {
+                el.classList.add('is-fading');
+                _orbitQuoteFadeTimer = setTimeout(() => {
+                    _orbitQuoteIdx = (_orbitQuoteIdx + 1) % ORBIT_QUOTES.length;
+                    el.textContent = ORBIT_QUOTES[_orbitQuoteIdx];
+                    el.classList.remove('is-fading');
+                }, 600);
+            }, 5000);
+        }
+
+        function stopOrbitQuotes() {
+            if (_orbitQuoteTimer) {
+                clearInterval(_orbitQuoteTimer);
+                _orbitQuoteTimer = null;
+            }
+            if (_orbitQuoteFadeTimer) {
+                clearTimeout(_orbitQuoteFadeTimer);
+                _orbitQuoteFadeTimer = null;
+            }
+            const el = document.getElementById('orbit_quote_text');
+            if (el) el.classList.remove('is-fading');
+        }
+
+        // 加载层一出现就轮换金句，关闭即停止（覆盖所有请求等待场景）
+        function initLoadingQuoteSync() {
+            const overlay = document.getElementById('loading_overlay');
+            if (!overlay) return;
+            const sync = () => {
+                if (overlay.classList.contains('active')) {
+                    startOrbitQuotes();
+                } else {
+                    stopOrbitQuotes();
+                }
+            };
+            if (window.MutationObserver) {
+                new MutationObserver(sync).observe(overlay, { attributes: true, attributeFilter: ['class'] });
+            }
+            sync();
+        }
+
         function switchPage(pageId) {
             try {
+                if (pageId !== 'page_career_detail' && treeFullscreen) {
+                    toggleTreeFullscreen(false);
+                }
                 document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
                 
                 const targetPage = document.getElementById(pageId);
@@ -1696,8 +2778,6 @@
                 const majorCategory = document.getElementById('major_category').value;
                 const majorName = document.getElementById('major_name').value;
                 const skills = document.getElementById('skills').value.trim();
-                const hobbies = document.getElementById('hobbies').value.trim();
-                const desiredCareer = document.getElementById('desired_career').value.trim();
                 const mbti = document.getElementById('mbti').value;
                 
                 if (!grade) {
@@ -1713,15 +2793,7 @@
                     return;
                 }
                 if (!skills) {
-                    showToast('请输入个人特长', 'error');
-                    return;
-                }
-                if (!hobbies) {
-                    showToast('请输入爱好', 'error');
-                    return;
-                }
-                if (!desiredCareer) {
-                    showToast('请输入期望职业', 'error');
+                    showToast('请输入爱好/个人特长', 'error');
                     return;
                 }
                 if (!mbti) {
@@ -1741,7 +2813,7 @@
                 
                 const basicInfo = JSON.parse(localStorage.getItem('basic_info') || '{}');
                 
-                fetch('/api/recommend', {
+                fetch(__BASE__ + '/api/recommend', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ basic_info: basicInfo })
@@ -1761,6 +2833,10 @@
                     
                     renderStarMap(result.data.careers);
                     renderCareerList(result.data.careers);
+                    
+                    if (result.service_error) {
+                        showServiceErrorModal();
+                    }
                 })
                 .catch(error => {
                     console.error('goToPage2 error:', error);
@@ -1817,7 +2893,7 @@
         async function fetchCareerRecommendations() {
             const basicInfo = JSON.parse(localStorage.getItem('basic_info') || '{}');
             
-            const response = await fetch('/api/recommend', {
+            const response = await fetch(__BASE__ + '/api/recommend', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -1833,6 +2909,9 @@
                 localStorage.setItem('career_recommendations', JSON.stringify(result.data));
                 renderStarMap(result.data.careers);
                 renderCareerList(result.data.careers);
+                if (result.service_error) {
+                    showServiceErrorModal();
+                }
             } else {
                 throw new Error(result.msg || '获取职业推荐失败');
             }
@@ -1918,6 +2997,7 @@
             });
             
             let currentAngle = 0;
+            const labelData = [];
             orbitLevels.forEach((radius, levelIndex) => {
                 const levelCareers = groupedCareers[levelIndex];
                 if (levelCareers.length === 0) return;
@@ -1930,8 +3010,8 @@
                     const py = centerY + radius * Math.sin(angle);
                     
                     const normalizedMatch = (career.interest_match - minMatch) / matchRange;
-                    const baseSize = isMobile ? 7 : 10;
-                    const sizeRange = isMobile ? 10 : 15;
+                    const baseSize = isMobile ? 7 : 14;
+                    const sizeRange = isMobile ? 10 : 20;
                     const size = baseSize + normalizedMatch * sizeRange;
                     const brightness = 0.4 + normalizedMatch * 0.6;
                     
@@ -1954,18 +3034,59 @@
                         showCareerDetail(career);
                     });
                     wrapper.appendChild(star);
-                    
-                    const label = document.createElement('div');
-                    label.className = 'star-label';
-                    label.textContent = career.name;
-                    label.style.left = `${Math.min(Math.max(px, 20), containerWidth - 20)}px`;
-                    label.style.top = `${Math.min(Math.max(py + size / 2 + labelOffset, size + 20), containerHeight - 25)}px`;
-                    wrapper.appendChild(label);
+
+                    labelData.push({ name: career.name, px, py, size });
                 });
-                
+
                 currentAngle += angleStep / 2;
             });
-            
+
+            // 职业名称标签防重叠布局：同一水平线且水平距离过近时垂直错开，
+            // 下方无空间或仍重叠时改放到行星上方
+            const labelLineHeight = isMobile ? 11 : 14;
+            const labelGap = 6;
+            const placedLabels = [];
+
+            const estimateLabelWidth = (name) => {
+                let units = 0;
+                for (const ch of name) units += ch.charCodeAt(0) > 255 ? 1 : 0.55;
+                return units * (isMobile ? 7 : 10) + 8;
+            };
+
+            labelData.forEach(item => {
+                const w = estimateLabelWidth(item.name);
+                const collides = (cy) => placedLabels.some(p =>
+                    Math.abs(p.cy - cy) < labelLineHeight &&
+                    Math.abs(p.cx - item.px) < (p.halfW + w / 2 + labelGap)
+                );
+
+                let ly = item.py + item.size / 2 + labelOffset;
+                let attempts = 0;
+                while (attempts < 8 && collides(ly) && ly + labelLineHeight <= containerHeight - 25) {
+                    ly += labelLineHeight;
+                    attempts++;
+                }
+
+                if (collides(ly)) {
+                    let uy = item.py - item.size / 2 - (isMobile ? 10 : 16);
+                    attempts = 0;
+                    while (attempts < 8 && collides(uy) && uy - labelLineHeight >= 10) {
+                        uy -= labelLineHeight;
+                        attempts++;
+                    }
+                    if (!collides(uy)) ly = uy;
+                }
+
+                placedLabels.push({ cx: item.px, cy: ly, halfW: w / 2 });
+
+                const label = document.createElement('div');
+                label.className = 'star-label';
+                label.textContent = item.name;
+                label.style.left = `${Math.min(Math.max(item.px, 20), containerWidth - 20)}px`;
+                label.style.top = `${Math.min(Math.max(ly, item.size + 20), containerHeight - 25)}px`;
+                wrapper.appendChild(label);
+            });
+
             initStarMapDrag(container);
         }
         
@@ -2256,7 +3377,7 @@
                 if (loadingText) loadingText.textContent = '正在为您绘制职业规划...';
                 if (loadingOverlay) loadingOverlay.classList.add('active');
                 
-                const response = await fetch('/api/generate', {
+                const response = await fetch(__BASE__ + '/api/generate', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -2278,6 +3399,9 @@
                     localStorage.setItem('report_content', result.data);
                     renderReport(result.data);
                     switchPage('page4');
+                    if (result.service_error) {
+                        showServiceErrorModal();
+                    }
                 } else {
                     showToast(result.msg || '生成报告失败', 'error');
                 }
@@ -2304,11 +3428,61 @@
             }
         }
         
-        function regenerateReport() {
-            generateReport();
-            if (currentCareer) {
-                generateLearningPath();
+        function readLearningPathCache() {
+            if (lastLearningPathData && lastLearningPathData.nodes && lastLearningPathData.nodes.length) {
+                return { data: lastLearningPathData, career_name: (currentCareer ? currentCareer.name : '') };
             }
+            try {
+                const cached = JSON.parse(localStorage.getItem('learning_path_cache') || 'null');
+                if (cached && cached.data && cached.data.nodes && cached.data.nodes.length) {
+                    lastLearningPathData = cached.data;
+                    return { data: cached.data, career_name: cached.career_name || '' };
+                }
+            } catch (cacheError) {
+                console.error('readLearningPathCache error:', cacheError);
+            }
+            return null;
+        }
+
+        function showLearningPathAgain() {
+            try {
+                const cached = readLearningPathCache();
+                if (!cached) {
+                    showToast('还没有生成过学习路线，请先在学习路线页生成一次', 'error');
+                    return;
+                }
+                if (treeFullscreen) toggleTreeFullscreen(false);
+
+                const inputSection = document.getElementById('input_section');
+                const careerDetailTitle = document.getElementById('career_detail_title');
+                const careerDescEl = document.getElementById('career_detail_desc');
+                const zhihuFeelings = document.getElementById('zhihu_feelings_container');
+                const learningTreeContainer = document.getElementById('learning_tree_container');
+                const treeNextBtn = document.getElementById('tree_next_btn');
+                const backReportBtn = document.getElementById('tree_back_report_btn');
+
+                if (inputSection) inputSection.style.display = 'none';
+                if (careerDetailTitle) careerDetailTitle.style.display = 'none';
+                if (careerDescEl) careerDescEl.style.display = 'none';
+                if (zhihuFeelings) zhihuFeelings.style.display = 'none';
+                if (learningTreeContainer) learningTreeContainer.style.display = 'block';
+                if (treeNextBtn) treeNextBtn.style.display = 'flex';
+                if (backReportBtn) backReportBtn.style.display = 'inline-block';
+
+                switchPage('page_career_detail');
+                renderLearningTree(cached.data);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (error) {
+                console.error('showLearningPathAgain error:', error);
+                showToast('展示学习路线失败，请刷新页面重试', 'error');
+            }
+        }
+
+        function goToReportPage() {
+            const backReportBtn = document.getElementById('tree_back_report_btn');
+            if (backReportBtn) backReportBtn.style.display = 'none';
+            switchPage('page4');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
         async function exportPDF() {
@@ -2380,6 +3554,10 @@
         color: #475569;
         font-size: 13px;
     }
+    .report-content table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+    .report-content th { background: #ede9fe; color: #5b21b6; padding: 8px 10px; border: 1px solid #cbd5e1; text-align: left; font-weight: 600; }
+    .report-content td { padding: 8px 10px; border: 1px solid #cbd5e1; color: #334155; line-height: 1.6; }
+    .report-content tbody tr:nth-child(even) td { background: #f8fafc; }
     .info-bar {
         display: flex;
         gap: 20px;
@@ -2475,7 +3653,88 @@
         let treeTranslateX = 0;
         let treeTranslateY = 0;
         let treeInnerContainer = null;
+        let lastLearningPathData = null;
         
+        const KW_TONE_CLASS = { positive: 'kwcard--pos', neutral: 'kwcard--neu', warning: 'kwcard--warn' };
+        const KW_TONE_COLOR = { positive: '#22c55e', neutral: '#60a5fa', warning: '#f59e0b' };
+
+        function feelingsEls() {
+            return {
+                kw: document.getElementById('zhihu_feelings_keywords'),
+                sum: document.getElementById('zhihu_feelings_summary'),
+                src: document.getElementById('zhihu_feelings_content'),
+                toggle: document.getElementById('zhihu_feelings_toggle'),
+                status: document.getElementById('zhihu_feelings_status'),
+                count: document.getElementById('zhihu_feelings_count')
+            };
+        }
+
+        async function loadZhihuFeelings(careerName) {
+            const els = feelingsEls();
+            if (!els.src) return;
+            if (els.kw) els.kw.innerHTML = '';
+            if (els.sum) { els.sum.textContent = ''; els.sum.style.display = 'none'; }
+            els.src.innerHTML = '<div style="color:#94a3b8; text-align:center; padding:20px;">\u6b63\u5728\u641c\u7d22\u77e5\u53cb\u7684\u771f\u5b9e\u611f\u53d7...</div>';
+            if (els.toggle) { els.toggle.style.display = 'none'; els.toggle.classList.remove('on'); }
+            if (els.count) els.count.textContent = '';
+            if (els.status) { els.status.textContent = '\u6b63\u5728\u6574\u7406\u77e5\u53cb\u7ecf\u9a8c\u2026'; els.status.style.display = 'block'; }
+            try {
+                const response = await fetch(__BASE__ + '/api/zhihu_feelings', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ career_name: careerName, distill: true })
+                });
+                const result = await response.json();
+                const items = (result && result.data) || [];
+                if (result.code === 0 && items.length > 0) {
+                    renderZhihuFeelings(items, result.keywords || [], result.summary || '');
+                } else if (els.status) {
+                    els.status.textContent = '\u6682\u65f6\u6ca1\u6709\u76f8\u5173\u77e5\u53cb\u5206\u4eab\u3002';
+                }
+            } catch (error) {
+                console.error('loadZhihuFeelings error:', error);
+                if (els.status) els.status.textContent = '\u641c\u7d22\u5931\u8d25\uff0c\u8bf7\u7a0d\u540e\u91cd\u8bd5\u3002';
+            }
+        }
+
+        function renderZhihuFeelings(items, keywords, summary) {
+            const els = feelingsEls();
+            if (!els.src) return;
+            if (els.status) els.status.style.display = 'none';
+            if (els.kw) {
+                els.kw.innerHTML = (keywords || []).map(function (k) {
+                    const toneCls = KW_TONE_CLASS[k.tone] || KW_TONE_CLASS.neutral;
+                    const color = KW_TONE_COLOR[k.tone] || KW_TONE_COLOR.neutral;
+                    const w = Math.max(8, Math.min(100, parseInt(k.weight, 10) || 60));
+                    return '<div class="kwcard ' + toneCls + '">' +
+                        '<div class="kwcard__word">' + escapeHtml(k.word || '') + '</div>' +
+                        (k.note ? '<div class="kwcard__note">' + escapeHtml(k.note) + '</div>' : '') +
+                        '<span class="kwcard__bar" style="width:' + w + '%; background:' + color + ';"></span></div>';
+                }).join('');
+            }
+            if (els.sum) {
+                els.sum.textContent = summary || '';
+                els.sum.style.display = summary ? 'block' : 'none';
+            }
+            if (els.count) els.count.textContent = items.length + ' \u6761\u77e5\u53cb\u5206\u4eab';
+            els.src.innerHTML = items.map(function (item) {
+                return '<a href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener" class="feeling-item">' +
+                    '<div class="feeling-title">' + escapeHtml(item.title) + '</div>' +
+                    '<div class="feeling-text">' + escapeHtml(item.content) + '</div>' +
+                    '<div class="feeling-meta"><span>' + escapeHtml(item.author || '\u533f\u540d\u77e5\u53cb') + '</span>' +
+                    '<span>👍 ' + item.vote_up + '</span><span>💬 ' + item.comment_count + '</span></div></a>';
+            }).join('');
+            if (els.toggle) {
+                const label = els.toggle.querySelector('.feel-toggle__t');
+                if (label) label.textContent = '\u539f\u59cb\u5e16\u5b50 · ' + items.length + ' \u6761';
+                els.toggle.style.display = 'inline-block';
+                els.toggle.onclick = function () {
+                    const on = els.toggle.classList.toggle('on');
+                    els.src.style.display = on ? 'block' : 'none';
+                };
+                els.src.style.display = 'none';
+            }
+        }
+
         function showCareerDetail(career) {
             try {
                 console.log('showCareerDetail called with career:', career.name);
@@ -2511,6 +3770,8 @@
                     careerDesc.style.display = (career.description || career.reason) ? 'block' : 'none';
                 }
                 if (careerSkills) careerSkills.value = '';
+                const zhihuFeelingsContainer = document.getElementById('zhihu_feelings_container');
+                if (zhihuFeelingsContainer) zhihuFeelingsContainer.style.display = 'block';
                 if (careerGoals) careerGoals.value = '';
                 if (learningTreeContainer) learningTreeContainer.style.display = 'none';
                 if (learningTree) {
@@ -2521,6 +3782,7 @@
                 if (treeNextBtn) treeNextBtn.style.display = 'none';
                 if (inputSection) inputSection.style.display = 'block';
                 
+                loadZhihuFeelings(career.name);
                 switchPage('page_career_detail');
             } catch (error) {
                 console.error('showCareerDetail error:', error);
@@ -2574,6 +3836,7 @@
                         if (treeNextBtn) treeNextBtn.style.display = 'none';
                         if (inputSection) inputSection.style.display = 'block';
                         
+                        loadZhihuFeelings(currentCareer.name);
                         switchPage('page_career_detail');
                         return;
                     }
@@ -2618,6 +3881,40 @@
             }
         }
         
+        // 统一的可视区适配：
+        // 普通视图 → 整体缩放，先看清全局结构
+        // 放大查看 → 按宽度适配（不低于 50%），文字可读，纵向拖拽看后续阶段
+        function fitTreeScale(containerW, containerH, contentW, contentH, preferWidth) {
+            if (!contentW || !contentH) return { scale: 1, tx: 0, ty: 0 };
+            const wFit = (containerW - 20) / contentW;
+            const hFit = (containerH - 20) / contentH;
+            let scale;
+            if (preferWidth) {
+                scale = Math.min(wFit, 1);
+                if (scale < 0.5) scale = Math.max(scale, 0.5);
+            } else {
+                scale = Math.min(wFit, hFit, 1);
+                if (scale < 0.3) scale = 0.3;
+            }
+            const tx = Math.max(0, (containerW - contentW * scale) / 2);
+            let ty = 0;
+            if (contentH * scale <= containerH - 20) {
+                ty = Math.max(0, (containerH - contentH * scale) / 2);
+            }
+            return { scale: scale, tx: tx, ty: ty };
+        }
+
+        function applyTreeFit(containerRect, contentW, contentH) {
+            const fit = fitTreeScale(
+                containerRect.width, containerRect.height, contentW, contentH,
+                !!treeFullscreen
+            );
+            treeScale = fit.scale;
+            treeTranslateX = fit.tx;
+            treeTranslateY = fit.ty;
+            updateTreeTransform();
+        }
+
         function resetTreeView() {
             const treeContainer = document.querySelector('.learning-tree-container');
             const wrapper = treeContainer ? treeContainer.querySelector('#learning_tree > div') : null;
@@ -2625,17 +3922,61 @@
                 const containerRect = treeContainer.getBoundingClientRect();
                 const contentWidth = parseFloat(treeInnerContainer.style.width);
                 const contentHeight = parseFloat(treeInnerContainer.style.height);
-                const scaleX = (containerRect.width - 40) / contentWidth;
-                const scaleY = (containerRect.height - 40) / contentHeight;
-                treeScale = Math.min(scaleX, scaleY, 1);
-                treeScale = Math.max(treeScale, 0.15);
-                treeTranslateX = Math.max(0, (containerRect.width - contentWidth * treeScale) / 2);
-                treeTranslateY = Math.max(0, (containerRect.height - contentHeight * treeScale) / 2);
-                updateTreeTransform();
+                applyTreeFit(containerRect, contentWidth, contentHeight);
                 wrapper.scrollLeft = 0;
                 wrapper.scrollTop = 0;
             }
         }
+
+        // ===== 学习路线图：放大到整个页面查看 =====
+        let treeFullscreen = false;
+
+        function toggleTreeFullscreen(force) {
+            const box = document.querySelector('.learning-tree-container');
+            if (!box) return;
+            const next = (typeof force === 'boolean') ? force : !treeFullscreen;
+            if (next === treeFullscreen) return;
+            treeFullscreen = next;
+
+            const wrapper = box.querySelector('#learning_tree > div');
+            if (next) {
+                box.classList.add('tree-fullscreen');
+                document.body.classList.add('tree-fs-open');
+                if (wrapper) {
+                    wrapper.style.flex = '1';
+                    wrapper.style.height = 'auto';
+                    wrapper.style.minHeight = '0';
+                    wrapper.style.maxHeight = 'none';
+                }
+            } else {
+                box.classList.remove('tree-fullscreen');
+                document.body.classList.remove('tree-fs-open');
+                if (wrapper) {
+                    wrapper.style.flex = '';
+                    wrapper.style.height = 'calc(100vh - 380px)';
+                    wrapper.style.minHeight = '600px';
+                    wrapper.style.maxHeight = '1000px';
+                }
+            }
+
+            const btn = document.getElementById('tree_fs_btn');
+            if (btn) {
+                btn.textContent = next ? '✕ 退出放大' : '⛶ 放大查看';
+                btn.title = next ? '退出放大（Esc）' : '放大到整个页面查看（按 Esc 可退出）';
+            }
+
+            // 尺寸变化后重新铺满视野
+            setTimeout(() => {
+                if (!box.offsetWidth) return;   // 容器已隐藏则跳过
+                try { resetTreeView(); } catch (e) { console.error('tree fit error:', e); }
+            }, 90);
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && treeFullscreen) {
+                toggleTreeFullscreen(false);
+            }
+        });
         
         function toggleDetailedInput() {
             const detail = document.getElementById('detailed_input');
@@ -2651,6 +3992,7 @@
 
         function resetLearningPath() {
             try {
+                if (treeFullscreen) toggleTreeFullscreen(false);
                 const inputSection = document.getElementById('input_section');
                 const careerDetailTitle = document.getElementById('career_detail_title');
                 const learningTreeContainer = document.getElementById('learning_tree_container');
@@ -2721,9 +4063,9 @@
                 console.log('careerGoals:', careerGoals);
                 
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 150000);
+                const timeoutId = setTimeout(() => controller.abort(), 240000);
                 
-                const response = await fetch('/api/learning_path?t=' + Date.now(), {
+                const response = await fetch(__BASE__ + '/api/learning_path?t=' + Date.now(), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -2764,6 +4106,16 @@
                 }
                 
                 if (result.code === 0) {
+                    lastLearningPathData = result.data;
+                    try {
+                        localStorage.setItem('learning_path_cache', JSON.stringify({
+                            career_name: currentCareer ? currentCareer.name : '',
+                            data: result.data,
+                            ts: Date.now()
+                        }));
+                    } catch (cacheError) {
+                        console.error('cache learning path error:', cacheError);
+                    }
                     const inputSection = document.getElementById('input_section');
                     const careerDetailTitle = document.getElementById('career_detail_title');
                     const learningTreeContainer = document.getElementById('learning_tree_container');
@@ -2773,8 +4125,16 @@
                     if (careerDetailTitle) careerDetailTitle.style.display = 'none';
                     const careerDescEl = document.getElementById('career_detail_desc');
                     if (careerDescEl) careerDescEl.style.display = 'none';
+                    const zhihuFeelings = document.getElementById('zhihu_feelings_container');
+                    if (zhihuFeelings) zhihuFeelings.style.display = 'none';
                     if (learningTreeContainer) learningTreeContainer.style.display = 'block';
                     if (treeNextBtn) treeNextBtn.style.display = 'flex';
+                    const backReportBtn = document.getElementById('tree_back_report_btn');
+                    if (backReportBtn) backReportBtn.style.display = 'none';
+                    
+                    if (result.service_error) {
+                        showServiceErrorModal();
+                    }
                     
                     try {
                         renderLearningTree(result.data);
@@ -2816,119 +4176,385 @@
                 const nodes = data.nodes;
                 const connections = data.connections;
                 
+                /* ============================================================
+                   学习路线布局：三个阶段并排成树
+                   阶段内 = 实线（先修顺序）；阶段之间 = 虚线衔接
+                   全局编号 = 1..N，按 阶段 → 行 → 从左到右，没有跳步
+                   ============================================================ */
                 const CONFIG = {
-                    levelGap: 480,
-                    nodeWidth: 260,
-                    nodeHeight: 160,
-                    siblingGap: 120,
-                    padding: 120
+                    nodeWidth: 228,
+                    nodeHeight: 148,
+                    colGap: 26,
+                    rowGap: 34,
+                    panelPadX: 24,
+                    panelPadTop: 80,
+                    panelPadBottom: 24,
+                    panelGapX: 76,
+                    marginX: 46,
+                    marginY: 46,
+                    edgeGapX: 84,
+                    maxColsPerPhase: 5,
+                    maxRowsPerCol: 4,
+                    headH: 56
                 };
-                
-                const startNode = nodes.find(n => n.type === 'start');
+
+                const startNode = nodes.find(n => n.type === 'start') || null;
                 const endNodes = nodes.filter(n => n.type === 'end');
-                
-                const adjacency = {};
-                nodes.forEach(node => adjacency[node.id] = []);
-                connections.forEach(conn => {
-                    if (conn.from !== conn.to) adjacency[conn.from].push(conn.to);
-                });
-                
+                const middleNodes = nodes.filter(n => n.type !== 'start' && n.type !== 'end');
+
                 const nodeMap = {};
-                nodes.forEach(node => {
-                    nodeMap[node.id] = node;
+                nodes.forEach(node => { nodeMap[node.id] = node; });
+
+                const adjacency = {};
+                nodes.forEach(node => { adjacency[node.id] = []; });
+                (connections || []).forEach(conn => {
+                    if (!conn || conn.from === conn.to) return;
+                    if (adjacency[conn.from]) adjacency[conn.from].push(conn.to);
                 });
-                
-                const nodeLevels = {};
-                const distFromStart = {};
-                
-                if (startNode) {
-                    const queue = [startNode.id];
-                    const visited = new Set([startNode.id]);
-                    distFromStart[startNode.id] = 0;
-                    nodeLevels[startNode.id] = 0;
-                    
-                    while (queue.length > 0) {
-                        const id = queue.shift();
-                        if (adjacency[id]) {
-                            adjacency[id].forEach(nextId => {
-                                if (!visited.has(nextId)) {
-                                    visited.add(nextId);
-                                    distFromStart[nextId] = distFromStart[id] + 1;
-                                    nodeLevels[nextId] = distFromStart[nextId];
-                                    queue.push(nextId);
-                                } else if (distFromStart[nextId] > distFromStart[id] + 1) {
-                                    distFromStart[nextId] = distFromStart[id] + 1;
-                                    nodeLevels[nextId] = distFromStart[nextId];
+
+                if (!middleNodes.length) {
+                    container.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>暂无学习路线数据</p></div>';
+                    return;
+                }
+
+                /* -------- 1. 依赖图：只看中间技能之间的先后关系 -------- */
+                const midIds = new Set(middleNodes.map(n => n.id));
+                const succ = {};
+                const pred = {};
+                middleNodes.forEach(n => { succ[n.id] = []; pred[n.id] = []; });
+                const seenPair = new Set();
+                (connections || []).forEach(c => {
+                    if (!c || c.from === c.to) return;
+                    if (!midIds.has(c.from) || !midIds.has(c.to)) return;
+                    const k = c.from + '->' + c.to;
+                    if (seenPair.has(k)) return;
+                    seenPair.add(k);
+                    succ[c.from].push(c.to);
+                    pred[c.to].push(c.from);
+                });
+
+                /* -------- 2. 拓扑序 + 深度：拓扑序按「学习顺序」优先（level 小的、
+                        后端 order 序号小的先出队），保证「编号顺序」与「连线方向」
+                        与真实学习先后一致，不会出现某节点排在它前置节点左边 -------- */
+                const topoIndex = {};
+                const depth = {};
+                const declaredPred = {};
+                middleNodes.forEach(n => {
+                    const set = [];
+                    (n.prereq || []).forEach(p => {
+                        if (midIds.has(p) && p !== n.id && set.indexOf(p) < 0) set.push(p);
+                    });
+                    declaredPred[n.id] = set;
+                });
+                (function computeDepth() {
+                    const indeg = {};
+                    middleNodes.forEach(n => { indeg[n.id] = pred[n.id].length; });
+                    // 学习顺序键：level 优先，其次后端给出的 order（骨架学习序列），最后退回数组序
+                    const seqKey = function (id) {
+                        const n = nodeMap[id];
+                        const lv = _lvOf(n);
+                        const od = (n && typeof n.order === 'number' && n.order > 0) ? n.order : 99999;
+                        return lv * 1000000 + od;
+                    };
+                    const left = middleNodes.map(n => n.id);
+                    const order = [];
+                    while (left.length) {
+                        let avail = left.filter(id => indeg[id] === 0);
+                        if (!avail.length) avail = left.slice(); // 环兜底
+                        avail.sort((a, b) => seqKey(a) - seqKey(b));
+                        const pick = avail[0];
+                        left.splice(left.indexOf(pick), 1);
+                        order.push(pick);
+                        succ[pick].forEach(nx => {
+                            if (indeg[nx] !== undefined) indeg[nx] -= 1;
+                        });
+                    }
+                    order.forEach((id, i) => {
+                        topoIndex[id] = i;
+                        let d = 0;
+                        pred[id].forEach(p => {
+                            const pd = (depth[p] === undefined ? 0 : depth[p]) + 1;
+                            if (pd > d) d = pd;
+                        });
+                        depth[id] = d;
+                    });
+                })();
+
+                /* -------- 3. 归入三个阶段（1 → 2 → 3，无跳步） -------- */
+                const PHASE_NAMES = ['打基础', '进阶提升', '实战与求职'];
+
+                function _lvOf(n) {
+                    const lv = parseInt(n.level, 10);
+                    return (isNaN(lv) || lv < 1) ? 1 : lv;
+                }
+
+                const levelsPresent = [];
+                middleNodes.forEach(n => {
+                    const lv = _lvOf(n);
+                    if (levelsPresent.indexOf(lv) < 0) levelsPresent.push(lv);
+                });
+                levelsPresent.sort((a, b) => a - b);
+
+                function phaseIndexOf(node) {
+                    const idx = levelsPresent.indexOf(_lvOf(node));
+                    return Math.min(idx < 0 ? 0 : idx, 2);
+                }
+
+                const activePhases = [];
+                for (let pi = 0; pi < 3; pi++) {
+                    const list = middleNodes.filter(n => phaseIndexOf(n) === pi);
+                    if (list.length) activePhases.push({ idx: pi, list: list });
+                }
+
+                /* -------- 4. 阶段内分列：先按依赖层分列，再做「收列 + 均衡」--------
+                   一步：同一深度的节点合成一列（左→右推进）；
+                   二步：列数超过上限时把末尾两层并进最后一列；
+                   三步：还没到列数上限时，把最高的列对半切开，
+                         使每列不超过 maxRowsPerCol 行——三栏高度因此接近，
+                         整图不再是一根 7-8 节点的长条。 */
+                let seq = 0;
+                activePhases.forEach(ph => {
+                    const deps = [];
+                    ph.list.forEach(n => {
+                        const d = depth[n.id] || 0;
+                        if (deps.indexOf(d) < 0) deps.push(d);
+                    });
+                    deps.sort((a, b) => a - b);
+
+                    ph.cols = deps.map(d => ph.list
+                        .filter(n => (depth[n.id] || 0) === d)
+                        .sort((a, b) => (topoIndex[a.id] || 0) - (topoIndex[b.id] || 0)));
+
+                    /* 列数目标：天然「同层一列」已经合规就保持原样；否则取
+                       「满足每列不超过 maxRowsPerCol 的最少列数」——应用区是窄列
+                       （~590px），列越少整图越窄，缩放到可读比例时越清楚。 */
+                    {
+                        const flat = [];
+                        ph.cols.forEach(col => col.forEach(n => flat.push(n)));
+                        const total = flat.length;
+                        const kNat = ph.cols.length;
+                        let widest = 0;
+                        ph.cols.forEach(col => { if (col.length > widest) widest = col.length; });
+                        let k = kNat;
+                        if (kNat > CONFIG.maxColsPerPhase || widest > CONFIG.maxRowsPerCol) {
+                            k = Math.min(CONFIG.maxColsPerPhase,
+                                         Math.max(1, Math.ceil(total / CONFIG.maxRowsPerCol)));
+                        }
+                        if (k < 1) k = 1;
+
+                        // 深度边界：切点落在这里不加罚分，让列尽量贴合「同层一列」
+                        const onBoundary = [];
+                        for (let i = 1; i < total; i++) {
+                            onBoundary[i] = ((depth[flat[i].id] || 0) !== (depth[flat[i - 1].id] || 0));
+                        }
+
+                        /* DP：把 total 个节点切成 k 段（段=列，段内保持顺序，
+                           因此所有边依旧只朝右或朝下）。代价按字典序比较：
+                           (最大段高, 未切在深度边界的切点数, 段高平方和)。 */
+                        const best = [];
+                        for (let j = 0; j <= k; j++) best.push(new Array(total + 1).fill(null));
+                        best[0][0] = { cost: [0, 0, 0], from: -1 };
+                        for (let j = 1; j <= k; j++) {
+                            for (let i = j; i <= total; i++) {
+                                for (let p = j - 1; p < i; p++) {
+                                    const prev = best[j - 1][p];
+                                    if (!prev) continue;
+                                    const size = i - p;
+                                    const cand = [
+                                        Math.max(prev.cost[0], size),
+                                        prev.cost[1] + ((i === total || onBoundary[i]) ? 0 : 1),
+                                        prev.cost[2] + size * size
+                                    ];
+                                    const cur = best[j][i];
+                                    const better = !cur
+                                        || cand[0] < cur.cost[0]
+                                        || (cand[0] === cur.cost[0] && cand[1] < cur.cost[1])
+                                        || (cand[0] === cur.cost[0] && cand[1] === cur.cost[1]
+                                            && cand[2] < cur.cost[2]);
+                                    if (better) best[j][i] = { cost: cand, from: p };
                                 }
-                            });
+                            }
+                        }
+
+                        if (total && best[k][total]) {
+                            const cuts = [total];
+                            let pos = total;
+                            for (let j = k; j >= 1; j--) {
+                                pos = best[j][pos].from;
+                                cuts.push(pos);
+                            }
+                            cuts.reverse();
+                            const balanced = [];
+                            for (let c = 0; c + 1 < cuts.length; c++) {
+                                const part = flat.slice(cuts[c], cuts[c + 1]);
+                                if (part.length) balanced.push(part);
+                            }
+                            if (balanced.length) ph.cols = balanced;
                         }
                     }
-                }
-                
-                let maxDist = 0;
-                Object.values(distFromStart).forEach(d => { if (d > maxDist) maxDist = d; });
-                if (maxDist === 0) maxDist = Math.ceil(nodes.length / 3);
-                
-                const endIds = new Set(endNodes.map(n => n.id));
-
-                // 所有终点节点统一放到最后一层（maxDist + 1）
-                // 让终点职业单独排成一列
-                endNodes.forEach(node => {
-                    nodeLevels[node.id] = maxDist + 1;
+                    ph.cols.forEach(col => {
+                        col.sort((a, b) => (topoIndex[a.id] || 0) - (topoIndex[b.id] || 0));
+                        col.forEach(n => {
+                            // 徽标 = 后端给出的真实学习顺序号；旧数据无 order 时退回自增
+                            n.__num = (n && typeof n.order === 'number' && n.order > 0)
+                                ? n.order : ++seq;
+                        });
+                    });
+                    ph.colCount = ph.cols.length;
                 });
 
-                nodes.forEach(node => {
-                    if (nodeLevels[node.id] === undefined) {
-                        nodeLevels[node.id] = Math.min(distFromStart[node.id] || Math.floor(maxDist / 2), maxDist);
-                    }
+                /* -------- 5. 面板尺寸：三栏同宽（各自内容居中），高度取最高列 -------- */
+                let maxContentW = 0;
+                activePhases.forEach(ph => {
+                    let maxColH = CONFIG.nodeHeight;
+                    ph.cols.forEach(col => {
+                        const h = col.length * CONFIG.nodeHeight + (col.length - 1) * CONFIG.rowGap;
+                        if (h > maxColH) maxColH = h;
+                    });
+                    ph.maxColH = maxColH;
+                    ph.contentW = ph.colCount * CONFIG.nodeWidth
+                                + Math.max(0, ph.colCount - 1) * CONFIG.colGap;
+                    if (ph.contentW > maxContentW) maxContentW = ph.contentW;
+                    ph.panelH = CONFIG.panelPadTop + maxColH + CONFIG.panelPadBottom;
                 });
-                
-                let maxLevel = Math.max(maxDist, ...Object.values(nodeLevels));
-                
-                const levels = {};
-                nodes.forEach(node => {
-                    const level = nodeLevels[node.id];
-                    if (!levels[level]) levels[level] = [];
-                    levels[level].push(node.id);
+                activePhases.forEach(ph => {
+                    ph.panelW = CONFIG.panelPadX * 2 + maxContentW;
+                    ph.colOffset = (maxContentW - ph.contentW) / 2;
                 });
-                
-                const levelHeights = {};
-                let maxLevelHeight = CONFIG.padding;
-                
-                for (let level = 0; level <= maxLevel; level++) {
-                    const nodeCount = (levels[level] || []).length;
-                    levelHeights[level] = nodeCount * CONFIG.nodeHeight + (nodeCount - 1) * CONFIG.siblingGap;
-                    if (levelHeights[level] > maxLevelHeight) maxLevelHeight = levelHeights[level];
+
+                // 三栏等高：等高面板 + 行对齐，整块看起来是一条整齐的带
+                let maxPanelH = 300;
+                activePhases.forEach(ph => {
+                    if (ph.panelH > maxPanelH) maxPanelH = ph.panelH;
+                });
+                activePhases.forEach(ph => { ph.panelH = maxPanelH; });
+
+                /* -------- 6. 列坐标 -------- */
+                const columns = [];
+                let cursorX = CONFIG.marginX;
+
+                if (startNode) {
+                    columns.push({ kind: 'start', left: cursorX, right: cursorX + CONFIG.nodeWidth });
+                    cursorX = cursorX + CONFIG.nodeWidth + CONFIG.edgeGapX;
                 }
-                
+                activePhases.forEach(ph => {
+                    ph.left = cursorX;
+                    ph.right = cursorX + ph.panelW;
+                    columns.push({ kind: 'phase', phase: ph, left: ph.left, right: ph.right });
+                    cursorX = cursorX + ph.panelW + CONFIG.panelGapX;
+                });
+                if (endNodes.length) {
+                    const lastRight = columns.length ? columns[columns.length - 1].right : CONFIG.marginX;
+                    const endLeft = lastRight + CONFIG.edgeGapX;
+                    columns.push({ kind: 'end', left: endLeft, right: endLeft + CONFIG.nodeWidth });
+                }
+
                 const positions = {};
-                
-                for (let level = 0; level <= maxLevel; level++) {
-                    const levelNodeIds = levels[level] || [];
-                    if (levelNodeIds.length === 0) continue;
-                    
-                    const levelX = level * CONFIG.levelGap + CONFIG.padding;
-                    const levelHeight = levelHeights[level];
-                    const levelY = CONFIG.padding + (maxLevelHeight - levelHeight) / 2;
-                    
-                    levelNodeIds.forEach((nodeId, index) => {
-                        positions[nodeId] = {
-                            x: levelX,
-                            y: levelY + index * (CONFIG.nodeHeight + CONFIG.siblingGap),
+                const colOf = {};
+                const phaseOf = {};
+                const innerCol = {};
+                const rowOf = {};
+                const phaseTop = CONFIG.marginY;
+
+                activePhases.forEach((ph, phIdx) => {
+                    const colIdx = columns.findIndex(c => c.kind === 'phase' && c.phase === ph);
+                    ph.top = phaseTop;
+                    ph.cols.forEach((col, c) => {
+                        const colX = ph.left + CONFIG.panelPadX + ph.colOffset
+                                   + c * (CONFIG.nodeWidth + CONFIG.colGap);
+                        // 列内顶部对齐：同一阶段的所有列从同一条顶线开始，行行整齐
+                        const colTop = ph.top + CONFIG.panelPadTop;
+                        col.forEach((n, i) => {
+                            positions[n.id] = {
+                                x: colX,
+                                y: colTop + i * (CONFIG.nodeHeight + CONFIG.rowGap),
+                                width: CONFIG.nodeWidth,
+                                height: CONFIG.nodeHeight
+                            };
+                            colOf[n.id] = colIdx;
+                            phaseOf[n.id] = phIdx;
+                            innerCol[n.id] = c;
+                            rowOf[n.id] = i;
+                        });
+                    });
+                });
+
+                // 起点与第一阶段第一列顶对齐，保证主线在一条水平线上
+                if (startNode) {
+                    positions[startNode.id] = {
+                        x: columns[0].left,
+                        y: phaseTop + CONFIG.panelPadTop,
+                        width: CONFIG.nodeWidth,
+                        height: CONFIG.nodeHeight
+                    };
+                    colOf[startNode.id] = 0;
+                }
+
+                if (endNodes.length) {
+                    const endColIdx = columns.length - 1;
+                    // 终点块与阶段行对齐：行行齐平，连线也能走行间空隙
+                    const blockTop = phaseTop + CONFIG.panelPadTop;
+                    endNodes.forEach((n, i) => {
+                        positions[n.id] = {
+                            x: columns[endColIdx].left,
+                            y: blockTop + i * (CONFIG.nodeHeight + CONFIG.rowGap),
                             width: CONFIG.nodeWidth,
                             height: CONFIG.nodeHeight
                         };
+                        colOf[n.id] = endColIdx;
+                        rowOf[n.id] = i;
                     });
                 }
-                
-                let totalWidth = (maxLevel + 1) * CONFIG.levelGap + CONFIG.padding * 2 + CONFIG.nodeWidth;
-                let totalHeight = CONFIG.padding;
-                Object.values(positions).forEach(pos => {
-                    if (pos.y + pos.height > totalHeight) {
-                        totalHeight = pos.y + pos.height;
-                    }
+
+                /* -------- 6b. 全局列序：起点 + 各阶段内每一列 + 终点 --------
+                   竖直段一律走列间空隙、水平段一律走行间空隙，从根上不压节点 */
+                const allCols = [];
+                const allColIndexOf = {};
+                if (startNode) {
+                    allColIndexOf[startNode.id] = allCols.length;
+                    allCols.push({ left: columns[0].left, right: columns[0].right });
+                }
+                activePhases.forEach((ph, phIdx) => {
+                    ph.cols.forEach((col, c) => {
+                        const l = ph.left + CONFIG.panelPadX + ph.colOffset
+                                + c * (CONFIG.nodeWidth + CONFIG.colGap);
+                        col.forEach(n => { allColIndexOf[n.id] = allCols.length; });
+                        allCols.push({ left: l, right: l + CONFIG.nodeWidth, phase: phIdx, inner: c });
+                    });
                 });
-                totalHeight += CONFIG.padding;
+                if (endNodes.length) {
+                    const ec = columns[columns.length - 1];
+                    endNodes.forEach(n => { allColIndexOf[n.id] = allCols.length; });
+                    allCols.push({ left: ec.left, right: ec.right });
+                }
+                nodes.forEach(n => {
+                    if (allColIndexOf[n.id] !== undefined) colOf[n.id] = allColIndexOf[n.id];
+                });
+
+                const gapCenters = [];
+                for (let gi = 0; gi < allCols.length - 1; gi++) {
+                    gapCenters[gi] = (allCols[gi].right + allCols[gi + 1].left) / 2;
+                }
+
+                // 每阶段两条横向通道：头部下方的进入通道、底部的绕行通道
+                const laneTopY = {};
+                const laneBottomY = {};
+                activePhases.forEach((ph, i) => {
+                    laneTopY[i] = ph.top + CONFIG.headH + 8;
+                    laneBottomY[i] = ph.top + ph.panelH - 10;
+                });
+
+                let contentBottom = phaseTop + (activePhases.length ? maxPanelH : CONFIG.nodeHeight);
+                Object.keys(positions).forEach(id => {
+                    const p = positions[id];
+                    if (p.y + p.height > contentBottom) contentBottom = p.y + p.height;
+                });
+
+                const corridorY = contentBottom + 48;
+                const totalWidth = columns.length
+                    ? columns[columns.length - 1].right + CONFIG.marginX
+                    : CONFIG.marginX * 2;
+                const totalHeight = corridorY + CONFIG.marginY - 8;
                 
                 treeScale = 1;
                 treeTranslateX = 0;
@@ -2961,7 +4587,7 @@
                 svg.style.position = 'absolute';
                 svg.style.top = '0';
                 svg.style.left = '0';
-                svg.style.zIndex = '0';
+                svg.style.zIndex = '1';
                 innerWrapper.appendChild(svg);
                 
                 const defs = document.createElementNS(svgNS, 'defs');
@@ -2993,248 +4619,190 @@
                 
                 svg.appendChild(defs);
                 
-                function drawLines() {
-                    const LABEL_MIN_H = 80;     // 标签所需最小水平空间
+                /* -------- 7. 阶段面板：三栏背景 + 标题 -------- */
+                activePhases.forEach((ph, i) => {
+                    const panel = document.createElement('div');
+                    panel.className = 'ln-phase-panel';
+                    panel.style.left = ph.left + 'px';
+                    panel.style.top = ph.top + 'px';
+                    panel.style.width = ph.panelW + 'px';
+                    panel.style.height = ph.panelH + 'px';
 
-                    function makePath(d, withArrow) {
-                        const p = document.createElementNS(svgNS, 'path');
-                        p.setAttribute('d', d);
-                        p.setAttribute('stroke', '#6366f1');
+                    let hours = 0;
+                    ph.list.forEach(n => { hours += (parseInt(n.duration, 10) || 0); });
+
+                    const head = document.createElement('div');
+                    head.className = 'ln-phase-head';
+                    head.innerHTML =
+                        '<span class="ln-phase-no">' + (i + 1) + '</span>' +
+                        '<span class="ln-phase-name">' + escapeHtml(PHASE_NAMES[ph.idx] || ('阶段' + (i + 1))) + '</span>' +
+                        '<span class="ln-phase-meta">' + ph.list.length + ' 个模块 · 约 ' + hours + 'h</span>';
+                    panel.appendChild(head);
+                    innerWrapper.appendChild(panel);
+                });
+
+                /* -------- 8. 连线：阶段内实线，阶段之间虚线 -------- */
+                function makeEdgePath(d, dashed) {
+                    const p = document.createElementNS(svgNS, 'path');
+                    p.setAttribute('d', d);
+                    p.setAttribute('fill', 'none');
+                    p.setAttribute('stroke-linecap', 'round');
+                    p.setAttribute('stroke-linejoin', 'round');
+                    if (dashed) {
+                        p.setAttribute('stroke', '#a78bfa');
                         p.setAttribute('stroke-width', '2');
-                        p.setAttribute('stroke-dasharray', '6,3');
-                        p.setAttribute('fill', 'none');
-                        if (withArrow) p.setAttribute('marker-end', 'url(#arrowhead)');
-                        svg.appendChild(p);
-                        return p;
+                        p.setAttribute('stroke-dasharray', '8,7');
+                        p.setAttribute('opacity', '0.85');
+                    } else {
+                        p.setAttribute('stroke', '#6366f1');
+                        p.setAttribute('stroke-width', '1.8');
+                    }
+                    p.setAttribute('marker-end', 'url(#arrowhead)');
+                    svg.appendChild(p);
+                    return p;
+                }
+
+                function edgeGeometry(fromId, toId) {
+                    const a = positions[fromId];
+                    const b = positions[toId];
+                    if (!a || !b) return null;
+
+                    const aCy = a.y + a.height / 2;
+                    const bCy = b.y + b.height / 2;
+                    const aR = a.x + a.width;
+                    const bCx = b.x + b.width / 2;
+                    const fp = phaseOf[fromId];
+                    const tp = phaseOf[toId];
+                    const fc = colOf[fromId];
+                    const tc = colOf[toId];
+
+                    // 目标行上方的空隙带；第一行用面板头部下方的进入通道
+                    const bandAbove = function (pid, phaseIdx) {
+                        if (rowOf[pid] > 0) return positions[pid].y - CONFIG.rowGap / 2;
+                        if (phaseIdx === undefined) return laneTopY[activePhases.length - 1];
+                        return laneTopY[phaseIdx];
+                    };
+
+                    /* 起点 → 本阶段第一列：一条直线，主线干净 */
+                    if (startNode && fromId === startNode.id && fc === 0 && tc === 1) {
+                        return { d: 'M ' + aR + ' ' + aCy + ' L ' + b.x + ' ' + bCy, dashed: true };
                     }
 
-                    function makeLabel(x, y, node) {
-                        if (!node || node.type === 'start') return;
-                        const diff = parseInt(node.difficulty) || 0;
-                        const duration = node.duration || 0;
-                        const labelText = `难度: ${'★'.repeat(Math.min(5, diff))} 时长: ${duration}h`;
-                        const text = document.createElementNS(svgNS, 'text');
-                        text.setAttribute('x', x);
-                        text.setAttribute('y', y);
-                        text.setAttribute('text-anchor', 'middle');
-                        text.setAttribute('fill', '#e9d5ff');
-                        text.setAttribute('font-size', '11px');
-                        text.setAttribute('font-weight', '500');
-                        svg.appendChild(text);
-                        text.textContent = labelText;
+                    /* 跨阶段 / 起点出发 / 指向终点：水平段走空隙带，从目标上方进入 */
+                    if (fp !== tp || fp === undefined) {
+                        const g1 = gapCenters[fc];
+                        const laneY = bandAbove(toId, tp);
+                        return {
+                            d: 'M ' + aR + ' ' + aCy + ' L ' + g1 + ' ' + aCy +
+                               ' L ' + g1 + ' ' + laneY + ' L ' + bCx + ' ' + laneY +
+                               ' L ' + bCx + ' ' + b.y,
+                            dashed: true
+                        };
                     }
 
-                    // 1. 计算每个节点的层级
-                    const levelOf = {};
-                    nodes.forEach(n => levelOf[n.id] = nodeLevels[n.id] || 0);
+                    /* 同一阶段：实线，左→右 */
+                    if (innerCol[toId] > innerCol[fromId]) {
+                        if (innerCol[toId] === innerCol[fromId] + 1) {
+                            const gx = b.x - CONFIG.colGap / 2;
+                            if (Math.abs(aCy - bCy) < 1) {
+                                return { d: 'M ' + aR + ' ' + aCy + ' L ' + b.x + ' ' + bCy, dashed: false };
+                            }
+                            return {
+                                d: 'M ' + aR + ' ' + aCy + ' L ' + gx + ' ' + aCy +
+                                   ' L ' + gx + ' ' + bCy + ' L ' + b.x + ' ' + bCy,
+                                dashed: false
+                            };
+                        }
+                        // 跨 2 列以上：走目标行的空隙带，从目标节点上方进入
+                        const g1 = aR + CONFIG.colGap / 2;
+                        const laneY = bandAbove(toId, fp);
+                        return {
+                            d: 'M ' + aR + ' ' + aCy + ' L ' + g1 + ' ' + aCy +
+                               ' L ' + g1 + ' ' + laneY + ' L ' + bCx + ' ' + laneY +
+                               ' L ' + bCx + ' ' + b.y,
+                            dashed: false
+                        };
+                    }
 
-                    // 2. 过滤并去重连接：只保留从低层级指向高层级的正向连接
-                    const validConnMap = new Map();
-                    connections.forEach(c => {
+                    /* 同列：相邻行一条竖线；隔行从右侧空隙绕到目标行再横向进入 */
+                    if (rowOf[toId] === rowOf[fromId] + 1) {
+                        return {
+                            d: 'M ' + (a.x + a.width / 2) + ' ' + (a.y + a.height) +
+                               ' L ' + (b.x + b.width / 2) + ' ' + b.y,
+                            dashed: false
+                        };
+                    }
+                    const g1 = aR + CONFIG.colGap / 2;
+                    return {
+                        d: 'M ' + aR + ' ' + aCy + ' L ' + g1 + ' ' + aCy +
+                           ' L ' + g1 + ' ' + bCy + ' L ' + (b.x + b.width) + ' ' + bCy,
+                        dashed: false
+                    };
+                }
+
+                /* 连线减噪：每个节点只画一条「主入边」，且只接受方向朝右的边——
+                   优先级：后端标记的真实学习顺序上一步(main) > 声明 prereq > 同栏推进 >
+                   同阶段 > 上一阶段 > 指向终点。反向右行边一律不画（悬停详情里仍能看到全部前后置）。 */
+                const EDGE_SKIP = 9000;
+
+                function edgeScore(c, targetId) {
+                    const isPrereq = (declaredPred[targetId] || []).indexOf(c.from) >= 0;
+                    const cf = colOf[c.from];
+                    const ct = colOf[targetId];
+                    if (cf === undefined || ct === undefined) return EDGE_SKIP;
+                    const tGap = Math.abs((topoIndex[targetId] || 0) - (topoIndex[c.from] || 0));
+                    if (startNode && c.from === startNode.id) {
+                        return (cf < ct ? 400 : EDGE_SKIP) + tGap;
+                    }
+                    // 「前进」= 更靠右的列，或同列但行号更大（同栏内自上而下推进）
+                    const sameCol = (cf === ct);
+                    const forward = (cf < ct) || (sameCol && rowOf[targetId] > rowOf[c.from]);
+                    if (!forward) return EDGE_SKIP;
+                    const f = phaseOf[c.from];
+                    const t = phaseOf[targetId];
+                    if (t === undefined) return 2500 + tGap;
+                    // main = 后端按真实学习顺序标注的主前置，最优先
+                    if (c.main) return 0 + tGap;
+                    if (isPrereq) return 600 + tGap;
+                    if (sameCol) return 1600 + tGap;
+                    if (f !== undefined && f === t) return 2000 + tGap;
+                    if (f !== undefined && t === f + 1) return 2400 + tGap;
+                    return 3000 + tGap;
+                }
+
+                function drawLines() {
+                    const incoming = {};
+                    const drawn = new Set();
+                    (connections || []).forEach(c => {
+                        if (!c || c.from === c.to) return;
                         if (!positions[c.from] || !positions[c.to]) return;
-                        if (c.from === c.to) return;
-                        const fromLevel = levelOf[c.from];
-                        const toLevel = levelOf[c.to];
-                        if (fromLevel >= toLevel) return;
-                        const k = `${c.from}->${c.to}`;
-                        if (!validConnMap.has(k)) validConnMap.set(k, c);
+                        if (!incoming[c.to]) incoming[c.to] = [];
+                        incoming[c.to].push(c);
                     });
 
-                    // 2.1 为孤立的终点节点补全入向连线
-                    // 优先从原始连接中查找指向该终点的父节点；否则在上一层级找 Y 坐标最近的节点
-                    const endNodeIds = new Set(endNodes.map(n => n.id));
-                    const hasIncoming = new Set();
-                    validConnMap.forEach(c => hasIncoming.add(c.to));
+                    function drawEdge(c) {
+                        const key = c.from + '->' + c.to;
+                        if (drawn.has(key)) return;
+                        drawn.add(key);
+                        const geo = edgeGeometry(c.from, c.to);
+                        if (geo) makeEdgePath(geo.d, geo.dashed);
+                    }
 
-                    endNodes.forEach(endNode => {
-                        if (hasIncoming.has(endNode.id)) return;
-                        const endLevel = levelOf[endNode.id];
-                        if (endLevel <= 0) return;
+                    const endIds = {};
+                    endNodes.forEach(n => { endIds[n.id] = true; });
 
-                        // 先从原始 connections 中查找指向该终点的有效父节点
-                        let parentFromOrigin = null;
-                        connections.forEach(c => {
-                            if (c.to === endNode.id && c.from !== endNode.id && positions[c.from]) {
-                                const fromLevel = levelOf[c.from];
-                                if (fromLevel !== undefined && fromLevel < endLevel) {
-                                    parentFromOrigin = c.from;
-                                }
-                            }
+                    Object.keys(incoming).forEach(targetId => {
+                        const cands = incoming[targetId];
+                        let best = null;
+                        let bestScore = Infinity;
+                        cands.forEach(c => {
+                            const s = edgeScore(c, targetId);
+                            if (s < bestScore) { bestScore = s; best = c; }
                         });
-
-                        if (parentFromOrigin) {
-                            const k = `${parentFromOrigin}->${endNode.id}`;
-                            if (!validConnMap.has(k)) {
-                                validConnMap.set(k, { from: parentFromOrigin, to: endNode.id });
-                            }
-                            return;
-                        }
-
-                        // 否则在前置层级中找 Y 坐标最近的非终点节点
-                        // 优先从 endLevel - 1 开始，若该层无节点则向上逐层查找
-                        let nearestParent = null;
-                        let minDy = Infinity;
-                        let searchLevel = endLevel - 1;
-
-                        while (searchLevel >= 0 && !nearestParent) {
-                            nodes.forEach(n => {
-                                if (n.id === endNode.id) return;
-                                if (n.type === 'end') return;
-                                if (levelOf[n.id] !== searchLevel) return;
-                                const dy = Math.abs(positions[n.id].y - positions[endNode.id].y);
-                                if (dy < minDy) {
-                                    minDy = dy;
-                                    nearestParent = n;
-                                }
-                            });
-                            searchLevel--;
-                        }
-
-                        if (nearestParent) {
-                            const k = `${nearestParent.id}->${endNode.id}`;
-                            if (!validConnMap.has(k)) {
-                                validConnMap.set(k, { from: nearestParent.id, to: endNode.id });
-                            }
-                        }
-                    });
-
-                    const allConns = Array.from(validConnMap.values());
-
-                    // 终点节点所在的层级
-                    const endLevel = Math.max(...Object.values(levelOf));
-
-                    // 3. 按层级对 (fromLevel, toLevel) 分组
-                    // 终点层级连接单独处理，每个终点一条竖线
-                    const connsByLevelPair = {};
-                    const endConns = [];
-                    allConns.forEach(c => {
-                        if (levelOf[c.to] === endLevel) {
-                            endConns.push(c);
-                        } else {
-                            const key = `${levelOf[c.from]}->${levelOf[c.to]}`;
-                            if (!connsByLevelPair[key]) connsByLevelPair[key] = [];
-                            connsByLevelPair[key].push(c);
-                        }
-                    });
-
-                    // 4. 计算每对层级的统一通道X
-                    const channelXOfPair = {};
-                    Object.keys(connsByLevelPair).forEach(key => {
-                        const conns = connsByLevelPair[key];
-                        const parentRightXs = conns.map(c => positions[c.from].x + positions[c.from].width);
-                        const childLeftXs = conns.map(c => positions[c.to].x);
-                        const maxParentRightX = Math.max(...parentRightXs);
-                        const minChildLeftX = Math.min(...childLeftXs);
-
-                        let channelX = (maxParentRightX + minChildLeftX) / 2;
-                        const minChannelX = maxParentRightX + LABEL_MIN_H;
-                        const maxChannelX = minChildLeftX - 20;
-
-                        if (channelX < minChannelX) channelX = minChannelX;
-                        if (channelX > maxChannelX) channelX = maxChannelX;
-
-                        channelXOfPair[key] = channelX;
-                    });
-
-                    // 5. 按层级对绘制：统一竖线 + 父分支 + 子分支
-                    Object.keys(connsByLevelPair).forEach(key => {
-                        const conns = connsByLevelPair[key];
-                        const channelX = channelXOfPair[key];
-
-                        // 父节点去重
-                        const parentDataMap = new Map();
-                        conns.forEach(c => {
-                            if (!parentDataMap.has(c.from)) {
-                                parentDataMap.set(c.from, {
-                                    x: positions[c.from].x + positions[c.from].width,
-                                    y: positions[c.from].y + positions[c.from].height / 2
-                                });
-                            }
-                        });
-                        const parentData = Array.from(parentDataMap.values()).sort((a, b) => a.y - b.y);
-
-                        // 子节点去重
-                        const childDataMap = new Map();
-                        conns.forEach(c => {
-                            if (!childDataMap.has(c.to)) {
-                                childDataMap.set(c.to, {
-                                    id: c.to,
-                                    x: positions[c.to].x,
-                                    y: positions[c.to].y + positions[c.to].height / 2
-                                });
-                            }
-                        });
-                        const childData = Array.from(childDataMap.values()).sort((a, b) => a.y - b.y);
-
-                        const allY = [...parentData.map(d => d.y), ...childData.map(d => d.y)];
-                        const topY = Math.min(...allY);
-                        const bottomY = Math.max(...allY);
-
-                        // 统一竖线
-                        makePath(`M ${channelX} ${topY} L ${channelX} ${bottomY}`, false);
-
-                        // 父节点分支：父右 → channelX
-                        parentData.forEach(d => {
-                            makePath(`M ${d.x} ${d.y} L ${channelX} ${d.y}`, false);
-                        });
-
-                        // 子节点分支：channelX → 子左
-                        childData.forEach(d => {
-                            makePath(`M ${channelX} ${d.y} L ${d.x} ${d.y}`, true);
-                            // 终点节点的连线上不显示标签
-                            if (nodeMap[d.id] && nodeMap[d.id].type !== 'end') {
-                                makeLabel((channelX + d.x) / 2, d.y - 8, nodeMap[d.id]);
-                            }
-                        });
-                    });
-
-                    // 6. 单独绘制终点层级连接：每个终点一条独立竖线
-                    // 避免整层统一竖线导致上下拉扯
-                    const endConnsByChild = {};
-                    endConns.forEach(c => {
-                        if (!endConnsByChild[c.to]) endConnsByChild[c.to] = [];
-                        endConnsByChild[c.to].push(c);
-                    });
-
-                    Object.keys(endConnsByChild).forEach(childId => {
-                        const conns = endConnsByChild[childId];
-                        const tp = positions[childId];
-                        if (!tp) return;
-                        const endX = tp.x;
-                        const endY = tp.y + tp.height / 2;
-
-                        const parentData = conns.map(c => ({
-                            x: positions[c.from].x + positions[c.from].width,
-                            y: positions[c.from].y + positions[c.from].height / 2
-                        })).sort((a, b) => a.y - b.y);
-
-                        const maxParentX = Math.max(...parentData.map(d => d.x));
-
-                        let mergeX = (maxParentX + endX) / 2;
-                        const minMergeX = maxParentX + 40;
-                        const maxMergeX = endX - 20;
-                        if (mergeX < minMergeX) mergeX = minMergeX;
-                        if (mergeX > maxMergeX) mergeX = maxMergeX;
-
-                        const minParentY = Math.min(...parentData.map(d => d.y));
-                        const maxParentY = Math.max(...parentData.map(d => d.y));
-
-                        const topY = Math.min(endY, minParentY);
-                        const bottomY = Math.max(endY, maxParentY);
-
-                        // 统一竖线
-                        makePath(`M ${mergeX} ${topY} L ${mergeX} ${bottomY}`, false);
-
-                        // 父节点分支
-                        parentData.forEach(d => {
-                            makePath(`M ${d.x} ${d.y} L ${mergeX} ${d.y}`, false);
-                        });
-
-                        // 终点分支
-                        makePath(`M ${mergeX} ${endY} L ${endX} ${endY}`, true);
+                        if (best && bestScore < EDGE_SKIP) drawEdge(best);
                     });
                 }
-                
+
                 drawLines();
                 
                 function createNodeElement(node) {
@@ -3245,7 +4813,7 @@
                     let nodeClass = 'tree-node';
                     if (node.type === 'start') nodeClass += ' start-node';
                     if (node.type === 'end') nodeClass += ' end-node';
-                    div.className = nodeClass;
+                    div.className = nodeClass + ' ln-card';
                     div.style.position = 'absolute';
                     div.style.left = `${pos.x}px`;
                     div.style.top = `${pos.y}px`;
@@ -3254,7 +4822,22 @@
                     div.style.zIndex = '10';
                     div.style.cursor = 'pointer';
                     
-                    let contentHtml = '<div class="node-name">' + escapeHtml(node.name) + '</div>';
+                    let contentHtml = '';
+
+                    if (node.type !== 'start' && node.type !== 'end') {
+                        contentHtml += '<div class="ln-top">' +
+                            '<span class="ln-badge">' + (node.__num || '') + '</span>' +
+                            '</div>';
+                    }
+
+                    contentHtml += '<div class="node-name">' + escapeHtml(node.name) + '</div>';
+
+                    if (node.type !== 'start' && node.type !== 'end' && (node.level || node.cognitive)) {
+                        const stageBits = [];
+                        if (node.cognitive) stageBits.push(node.cognitive);
+                        if (node.stage_label) stageBits.push(node.stage_label);
+                        contentHtml += '<div class="node-stage">' + escapeHtml(stageBits.join(' · ')) + '</div>';
+                    }
 
                     if (node.type !== 'start') {
                         if (node.type === 'end') {
@@ -3273,21 +4856,38 @@
                             contentHtml += '<div class="node-metrics">' + metricsHtml.join('') + '</div>';
                         }
                     }
-                    
+
                     div.innerHTML = contentHtml;
-                    
+
                     div.addEventListener('mouseenter', () => {
+                        clearTimeout(tooltipHideTimer);
                         showNodeTooltip(node, div);
                     });
                     
                     div.addEventListener('mouseleave', () => {
-                        hideNodeTooltip();
+                        scheduleHideNodeTooltip();
                     });
                     
                     return div;
                 }
                 
+                // 反向邻接（父节点），用于悬浮提示展示先修/解锁关系
+                const reverseAdjacency = {};
+                nodes.forEach(n => { reverseAdjacency[n.id] = []; });
+                connections.forEach(c => {
+                    if (c.from === c.to) return;
+                    if (reverseAdjacency[c.to] && !reverseAdjacency[c.to].includes(c.from)) {
+                        reverseAdjacency[c.to].push(c.from);
+                    }
+                });
+                
                 let tooltipElement = null;
+                let tooltipHideTimer = null;
+                
+                function scheduleHideNodeTooltip() {
+                    clearTimeout(tooltipHideTimer);
+                    tooltipHideTimer = setTimeout(hideNodeTooltip, 180);
+                }
                 
                 function showNodeTooltip(node, nodeElement) {
                     hideNodeTooltip();
@@ -3296,7 +4896,7 @@
                     
                     tooltipElement = document.createElement('div');
                     tooltipElement.style.position = 'fixed';
-                    tooltipElement.style.width = isMobile ? 'min(220px, calc(100vw - 32px))' : '240px';
+                    tooltipElement.style.width = isMobile ? 'min(260px, calc(100vw - 32px))' : '340px';
                     tooltipElement.style.maxHeight = isMobile ? 'calc(100vh - 160px)' : 'calc(100vh - 80px)';
                     tooltipElement.style.background = 'rgba(30, 30, 50, 0.98)';
                     tooltipElement.style.border = '1px solid rgba(139, 92, 246, 0.5)';
@@ -3308,71 +4908,154 @@
                     tooltipElement.style.boxShadow = '0 8px 30px rgba(0, 0, 0, 0.5)';
                     tooltipElement.style.backdropFilter = 'blur(10px)';
 
-                    let html = `<h3 style="margin: 0 0 8px 0; color: #e9d5ff; font-size: 14px; font-weight: 600;">${escapeHtml(node.name)}</h3>`;
-
-                    if (node.description) {
+                    const badgeStyle = 'display:inline-block; font-size:11px; font-weight:400; padding:1px 8px; border-radius:99px; margin-left:8px; vertical-align:2px;';
+                    const typeBadge = node.type === 'start'
+                        ? `<span style="${badgeStyle} background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4);">起点</span>`
+                        : node.type === 'end'
+                            ? `<span style="${badgeStyle} background: rgba(34, 197, 94, 0.12); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.35);">细分职业</span>`
+                            : `<span style="${badgeStyle} background: rgba(167, 139, 250, 0.12); color: #c4b5fd; border: 1px solid rgba(167, 139, 250, 0.35);">学习内容</span>`;
+                    
+                    let html = `<h3 style="margin: 0 0 10px 0; color: #e9d5ff; font-size: 14px; font-weight: 600;">${escapeHtml(node.name)}${typeBadge}</h3>`;
+                    
+                    const sectionTitle = (icon, text, color) => `<h4 style="margin: 0 0 5px 0; color: ${color}; font-size: 12px; font-weight: 500;">${icon} ${text}</h4>`;
+                    const nameChips = (list) => list.map(n => `<span style="display:inline-block; margin: 0 6px 4px 0; padding: 2px 8px; background: rgba(96, 165, 250, 0.12); border: 1px solid rgba(96, 165, 250, 0.3); border-radius: 8px; color: #93c5fd; font-size: 11px;">${escapeHtml(n.name)}</span>`).join('');
+                    
+                    if (node.type === 'start') {
+                        const middleCount = nodes.filter(n => n.type !== 'start' && n.type !== 'end').length;
+                        const endCount = nodes.filter(n => n.type === 'end').length;
                         html += `<div style="margin-bottom: 10px;">
-                            <h4 style="margin: 0 0 4px 0; color: #a78bfa; font-size: 12px; font-weight: 500;">📋 学习内容</h4>
-                            <p style="margin: 0; color: #d1d5db; font-size: 12px; line-height: 1.5;">${escapeHtml(node.description)}</p>
+                            ${sectionTitle('🗺️', '路线概览', '#a78bfa')}
+                            <p style="margin: 0; color: #d1d5db; font-size: 12px; line-height: 1.6;">从当前起点出发，共 <b style="color:#e9d5ff;">${middleCount}</b> 项学习内容，通往 <b style="color:#4ade80;">${endCount}</b> 个细分职业方向。</p>
                         </div>`;
-                    }
-
-                    if (node.type !== 'start') {
-                        const userInfo = JSON.parse(localStorage.getItem('basic_info') || '{}');
-                        const userGrade = userInfo.grade || '';
-                        const userMajor = userInfo.major_name || userInfo.major_category || '';
-                        const userSkills = userInfo.skills || '';
-                        const userMBTI = userInfo.mbti || '';
-                        const userHobbies = userInfo.hobbies || '';
-                        const userCareer = currentCareer ? currentCareer.name : '';
-
-                        html += `<div style="margin-bottom: 15px;">
-                            <h4 style="margin: 0 0 8px 0; color: #a78bfa; font-size: 13px; font-weight: 500;">👤 用户匹配信息</h4>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">`;
-
-                        if (userGrade) html += `<div style="color: #9ca3af; font-size: 12px;"><span style="color: #60a5fa;">年级:</span> ${escapeHtml(userGrade)}</div>`;
-                        if (userMajor) html += `<div style="color: #9ca3af; font-size: 12px;"><span style="color: #60a5fa;">专业:</span> ${escapeHtml(userMajor)}</div>`;
-                        if (userSkills) html += `<div style="color: #9ca3af; font-size: 12px;"><span style="color: #60a5fa;">特长:</span> ${escapeHtml(userSkills)}</div>`;
-                        if (userMBTI) html += `<div style="color: #9ca3af; font-size: 12px;"><span style="color: #60a5fa;">MBTI:</span> ${escapeHtml(userMBTI)}</div>`;
-                        if (userHobbies) html += `<div style="color: #9ca3af; font-size: 12px;"><span style="color: #60a5fa;">爱好:</span> ${escapeHtml(userHobbies)}</div>`;
-                        if (userCareer) html += `<div style="color: #9ca3af; font-size: 12px;"><span style="color: #60a5fa;">目标:</span> ${escapeHtml(userCareer)}</div>`;
-
-                        html += `</div></div>`;
-
-                        let reason = '';
-                        if (node.type === 'end') {
-                            reason = `${escapeHtml(node.name)}是${escapeHtml(userCareer || '目标职业')}的细分方向，具备该领域的专业能力可以帮助您在竞争中脱颖而出。`;
-                        } else {
-                            if (userMajor && userGrade) {
-                                reason = `作为${escapeHtml(userGrade)}${escapeHtml(userMajor)}专业的学生，学习${escapeHtml(node.name)}将帮助您建立扎实的专业基础，为迈向${escapeHtml(userCareer || '理想职业')}打下坚实基础。`;
-                            } else if (userMajor) {
-                                reason = `作为${escapeHtml(userMajor)}专业的学生，学习${escapeHtml(node.name)}是通往${escapeHtml(userCareer || '目标职业')}的重要一步。`;
-                            } else {
-                                reason = `学习${escapeHtml(node.name)}将帮助您提升专业能力，为职业发展打下坚实基础。`;
-                            }
+                        const firstSteps = (adjacency[node.id] || []).map(id => nodeMap[id]).filter(Boolean);
+                        if (firstSteps.length) {
+                            html += `<div>
+                                ${sectionTitle('🚀', '从这里开始', '#60a5fa')}
+                                <div>${nameChips(firstSteps)}</div>
+                            </div>`;
+                        }
+                    } else {
+                        if (node.description) {
+                            html += `<div style="margin-bottom: 10px;">
+                                ${sectionTitle('📋', node.type === 'end' ? '方向简介' : '学习内容', '#a78bfa')}
+                                <p style="margin: 0; color: #d1d5db; font-size: 12px; line-height: 1.5;">${escapeHtml(node.description)}</p>
+                            </div>`;
                         }
 
-                        html += `<div style="margin-bottom: 15px;">
-                            <h4 style="margin: 0 0 6px 0; color: #f59e0b; font-size: 13px; font-weight: 500;">💡 推荐理由</h4>
-                            <p style="margin: 0; color: #d1d5db; font-size: 13px; line-height: 1.6;">${reason}</p>
-                        </div>`;
-                    }
+                        if (node.type !== 'end' && node.deliverable) {
+                            html += `<div style="margin-bottom: 10px;">
+                                ${sectionTitle('🎯', '学完能做什么', '#34d399')}
+                                <p style="margin: 0; color: #a7f3d0; font-size: 12px; line-height: 1.55;">${escapeHtml(node.deliverable)}</p>
+                            </div>`;
+                        }
 
-                    if (node.type !== 'start') {
-                        const diff = parseInt(node.difficulty) || 0;
-                        const imp = parseInt(node.importance) || 0;
-                        html += `<div style="margin-top: 15px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
-                            <div style="display: flex; gap: 20px;">
-                                <div><span style="color: #f87171;">难度</span>: <span style="color: #fbbf24;">${'★'.repeat(Math.min(5, diff))}${'☆'.repeat(5 - Math.min(5, diff))}</span></div>
-                                <div><span style="color: #34d399;">重要</span>: <span style="color: #fbbf24;">${'★'.repeat(Math.min(5, imp))}${'☆'.repeat(5 - Math.min(5, imp))}</span></div>
-                                <div><span style="color: #60a5fa;">时长</span>: <span style="color: #9ca3af;">${escapeHtml(node.duration || 0)}h</span></div>
-                            </div>
-                        </div>`;
+                        if (node.type !== 'end' && node.acceptance) {
+                            html += `<div style="margin-bottom: 10px;">
+                                ${sectionTitle('✅', '怎么算学会', '#fbbf24')}
+                                <p style="margin: 0; color: #fde68a; font-size: 12px; line-height: 1.55;">${escapeHtml(node.acceptance)}</p>
+                            </div>`;
+                        }
+
+                        if (node.type !== 'end' && node.topics && node.topics.length) {
+                            const topicChips = node.topics.map(t => `<span style="display:inline-block; margin: 0 6px 4px 0; padding: 2px 8px; background: rgba(167, 139, 250, 0.12); border: 1px solid rgba(167, 139, 250, 0.3); border-radius: 8px; color: #ddd6fe; font-size: 11px;">${escapeHtml(t)}</span>`).join('');
+                            html += `<div style="margin-bottom: 10px;">
+                                ${sectionTitle('📌', '要掌握的知识点', '#c4b5fd')}
+                                <div>${topicChips}</div>
+                            </div>`;
+                        }
+                    
+                        const parents = (reverseAdjacency[node.id] || []).map(id => nodeMap[id]).filter(Boolean);
+                        const children = (adjacency[node.id] || []).map(id => nodeMap[id]).filter(Boolean);
+                    
+                        if (node.type === 'end') {
+                            const reasonText = node.reason || (currentCareer ? currentCareer.reason : '') || '';
+                            if (reasonText) {
+                                html += `<div style="margin-bottom: 10px;">
+                                    ${sectionTitle('💡', '推荐理由', '#f59e0b')}
+                                    <p style="margin: 0; color: #d1d5db; font-size: 12px; line-height: 1.6;">${escapeHtml(reasonText)}</p>
+                                </div>`;
+                            }
+                            if (parents.length) {
+                                html += `<div>
+                                    ${sectionTitle('🧭', '走通这条路需要掌握', '#34d399')}
+                                    <div>${nameChips(parents)}</div>
+                                </div>`;
+                            }
+                        } else {
+                            const diff = Math.min(5, Math.max(0, parseInt(node.difficulty) || 0));
+                            const imp = Math.min(5, Math.max(0, parseInt(node.importance) || 0));
+                            const dur = parseInt(node.duration) || 0;
+                    
+                            html += `<div style="margin-bottom: 10px; display: flex; gap: 14px; flex-wrap: wrap;">
+                                <div style="font-size: 12px;"><span style="color: #f87171;">难度</span> <span style="color: #fbbf24;">${'★'.repeat(diff)}${'☆'.repeat(5 - diff)}</span></div>
+                                <div style="font-size: 12px;"><span style="color: #34d399;">重要</span> <span style="color: #fbbf24;">${'★'.repeat(imp)}${'☆'.repeat(5 - imp)}</span></div>
+                                <div style="font-size: 12px;"><span style="color: #60a5fa;">时长</span> <span style="color: #9ca3af;">${escapeHtml(node.duration || 0)}h</span></div>
+                            </div>`;
+                    
+                            if (parents.length || children.length) {
+                                html += `<div style="margin-bottom: 10px;">${sectionTitle('🧭', '在路线中的位置', '#60a5fa')}`;
+                                if (parents.length) {
+                                    html += `<div style="margin-bottom: 4px;"><span style="color: #9ca3af; font-size: 11px;">先完成：</span>${nameChips(parents)}</div>`;
+                                }
+                                if (children.length) {
+                                    html += `<div><span style="color: #9ca3af; font-size: 11px;">学后解锁：</span>${nameChips(children)}</div>`;
+                                }
+                                html += `</div>`;
+                            }
+                    
+                            const tips = [];
+                            if (diff >= 4) tips.push('难度较高，建议拆成多个小目标，每天固定时间推进，卡住时先回头巩固前置内容');
+                            else if (diff > 0 && diff <= 2) tips.push('难度不高，可以快速通关，把省下的时间留给更难的节点');
+                            if (imp >= 4) tips.push('核心内容，对后续学习和目标岗位都很关键，值得多投入精力吃透');
+                            if (dur >= 80) tips.push('学时较长，建议边学边做小型实战巩固，避免只看不动手');
+                            else if (dur > 0 && dur <= 30) tips.push('学时较短，适合集中一段时间一口气学完');
+                            if (!parents.length) tips.push('没有先修要求，可以直接开始');
+                            if (tips.length) {
+                                html += `<div style="margin-bottom: 10px;">
+                                    ${sectionTitle('💡', '学习建议', '#f59e0b')}
+                                    <p style="margin: 0; color: #d1d5db; font-size: 12px; line-height: 1.6;">${tips.slice(0, 3).map(escapeHtml).join('<br>')}</p>
+                                </div>`;
+                            }
+                    
+                            if (node.resources && node.resources.length) {
+                                const resItems = node.resources.map(r => {
+                                    let resName, resUrl;
+                                    if (typeof r === 'object' && r !== null) {
+                                        resName = r.name || '学习资源';
+                                        resUrl = r.url || '';
+                                    } else {
+                                        const m = String(r).match(/(https?:\/\/[^\s<>"]+)/);
+                                        if (m) { resUrl = m[1]; resName = String(r).replace(resUrl, '').trim() || '学习资源'; }
+                                        else { resName = String(r); resUrl = ''; }
+                                    }
+                                    const valid = /^https?:\/\/[^\s<>"]+$/.test(resUrl);
+                                    return valid
+                                        ? `<div class="tooltip-resource" data-url="${escapeHtml(resUrl)}" style="cursor: pointer; color: #60a5fa; font-size: 12px; line-height: 1.6; margin-bottom: 4px; word-break: break-all; text-decoration: underline; text-decoration-color: rgba(96,165,250,0.4);">🔗 ${escapeHtml(resName)}</div>`
+                                        : `<div style="color: #9ca3af; font-size: 12px; line-height: 1.6; margin-bottom: 4px;">📄 ${escapeHtml(resName)}</div>`;
+                                }).join('');
+                                html += `<div>
+                                    ${sectionTitle('📚', '推荐资源与课程', '#34d399')}
+                                    ${resItems}
+                                </div>`;
+                            }
+                        }
                     }
                     
                     tooltipElement.innerHTML = html;
                     tooltipElement.style.visibility = 'hidden';
                     document.body.appendChild(tooltipElement);
+                    // 鼠标移入提示框时保持显示，便于点击资源链接；移出后延迟隐藏
+                    tooltipElement.addEventListener('mouseenter', () => clearTimeout(tooltipHideTimer));
+                    tooltipElement.addEventListener('mouseleave', scheduleHideNodeTooltip);
+                    tooltipElement.addEventListener('click', (e) => {
+                        const link = e.target.closest('[data-url]');
+                        if (!link) return;
+                        e.stopPropagation();
+                        const url = link.getAttribute('data-url');
+                        if (url && /^https?:\/\/[^\s<>"]+$/.test(url)) {
+                            window.open(url, '_blank', 'noopener,noreferrer');
+                        }
+                    });
                     
                     const tooltipRect = tooltipElement.getBoundingClientRect();
                     const nodeRect = nodeElement.getBoundingClientRect();
@@ -3456,16 +5139,7 @@
                 
                 setTimeout(() => {
                     const containerRect = container.getBoundingClientRect();
-                    const scaleX = (containerRect.width - 20) / totalWidth;
-                    const scaleY = (containerRect.height - 20) / totalHeight;
-                    treeScale = Math.min(scaleX, scaleY, 1);
-                    treeScale = Math.max(treeScale, 0.15);
-                    
-                    treeTranslateX = Math.max(0, (containerRect.width - totalWidth * treeScale) / 2);
-                    treeTranslateY = Math.max(0, (containerRect.height - totalHeight * treeScale) / 2);
-                    
-                    updateTreeTransform();
-                    
+                    applyTreeFit(containerRect, totalWidth, totalHeight);
                     wrapper.scrollLeft = 0;
                     wrapper.scrollTop = 0;
                 }, 100);
@@ -3674,6 +5348,8 @@
             initStars();
             loadBasicInfo();
             loadDeepAnswers();
+            bindServiceModal();
+            initLoadingQuoteSync();
             
             const savedReport = localStorage.getItem('report_content');
             if (savedReport) {
@@ -3694,5 +5370,50 @@
             }
         });
     </script>
+
+<script id="v2-reveal">
+/* V2 reveal: scroll-in animation via IntersectionObserver. Non-destructive. */
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SEL = '.header, .section-title, .form-group, .legend-item, .question-card, ' +
+            '.career-list, .report-content, .learning-tree-container, ' +
+            '.course-links-content, .star-map-container';
+  var targets = document.querySelectorAll(SEL);
+
+  if (reduce || !('IntersectionObserver' in window)) {
+    for (var i = 0; i < targets.length; i++) targets[i].classList.add('is-visible');
+    return;
+  }
+
+  for (var j = 0; j < targets.length; j++) targets[j].classList.add('reveal');
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+  for (var k = 0; k < targets.length; k++) io.observe(targets[k]);
+
+  /* Safety net: elements inside display:none pages (page switches, resize, scroll). */
+  function sweep() {
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    for (var n = 0; n < targets.length; n++) {
+      var el = targets[n];
+      if (el.classList.contains('is-visible')) continue;
+      var r = el.getBoundingClientRect();
+      if (r.top < vh && r.bottom > 0) el.classList.add('is-visible');
+    }
+  }
+  window.addEventListener('scroll', sweep, { passive: true });
+  window.addEventListener('resize', sweep);
+  document.addEventListener('click', sweep);
+  setTimeout(sweep, 400);
+})();
+
+</script>
 </body>
 </html>
