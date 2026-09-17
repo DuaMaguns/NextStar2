@@ -488,7 +488,8 @@ def save_contact():
 
 
 # ===== 数据查看后台（简单密码保护）=====
-ADMIN_PASSWORD = os.environ.get('CONTACTS_ADMIN_PASSWORD', 'nextster2026')
+# 安全：不再提供可预测的默认密码，必须通过环境变量 CONTACTS_ADMIN_PASSWORD 设置
+ADMIN_PASSWORD = os.environ.get('CONTACTS_ADMIN_PASSWORD', '__CONTACTS_ADMIN_PASSWORD_NOT_SET__')
 
 @app.route('/admin/contacts')
 def admin_contacts():
